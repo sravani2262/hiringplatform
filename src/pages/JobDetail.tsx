@@ -77,10 +77,12 @@ export default function JobDetail() {
               </div>
             </div>
             <div className="flex gap-2">
-              <Button>
-                <Edit className="mr-2 h-4 w-4" />
-                Edit Job
-              </Button>
+              <Link to={`/jobs/${job.id}/edit`}>
+                <Button>
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit Job
+                </Button>
+              </Link>
               <Button variant="outline">
                 <Users className="mr-2 h-4 w-4" />
                 View Candidates

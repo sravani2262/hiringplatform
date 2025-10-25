@@ -123,7 +123,7 @@ All colors MUST be HSL.
 
 @layer base {
   * {
-    @apply border-border;
+    /* Removed global border application to eliminate unwanted black lines */
   }
 
   body {

@@ -48,9 +48,12 @@ export const handlers = [
 
     // Filter
     if (search) {
+      const searchLower = search.toLowerCase().trim();
       jobs = jobs.filter(job => 
-        job.title.toLowerCase().includes(search.toLowerCase()) ||
-        job.tags.some(tag => tag.toLowerCase().includes(search.toLowerCase()))
+        job.title.toLowerCase().includes(searchLower) ||
+        job.location.toLowerCase().includes(searchLower) ||
+        job.type.toLowerCase().includes(searchLower) ||
+        job.tags.some(tag => tag.toLowerCase().includes(searchLower))
       );
     }
     if (status) {
@@ -261,6 +264,13 @@ export const handlers = [
   }),
 
   // Assessments endpoints
+  http.get('/api/assessments', async () => {
+    await simulateNetwork();
+    
+    const assessments = await db.assessments.toArray();
+    return HttpResponse.json(assessments);
+  }),
+
   http.get('/api/assessments/:jobId', async ({ params }) => {
     await simulateNetwork();
     

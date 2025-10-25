@@ -1,6 +1,19 @@
 import { Layout } from '@/components/Layout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Briefcase, Users, ClipboardCheck, TrendingUp, Calendar, Target, Award, Clock } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Briefcase,
+  Users,
+  ClipboardCheck,
+  TrendingUp,
+  Target,
+  Award,
+} from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -44,7 +57,10 @@ export default function Index() {
     },
     {
       title: 'In Progress',
-      value: candidates?.data?.filter((c: any) => ['screen', 'tech', 'offer'].includes(c.stage)).length || 0,
+      value:
+        candidates?.data?.filter((c: any) =>
+          ['screen', 'tech', 'offer'].includes(c.stage)
+        ).length || 0,
       icon: ClipboardCheck,
       color: 'text-warning',
       bgColor: 'bg-warning/10',
@@ -62,52 +78,69 @@ export default function Index() {
     },
   ];
 
-  // Calculate conversion rates
   const totalCandidates = candidates?.data?.length || 0;
-  const hiredCandidates = candidates?.data?.filter((c: any) => c.stage === 'hired').length || 0;
-  const conversionRate = totalCandidates > 0 ? Math.round((hiredCandidates / totalCandidates) * 100) : 0;
+  const hiredCandidates =
+    candidates?.data?.filter((c: any) => c.stage === 'hired').length || 0;
+  const conversionRate =
+    totalCandidates > 0
+      ? Math.round((hiredCandidates / totalCandidates) * 100)
+      : 0;
 
-  // Recent activity data
   const recentCandidates = candidates?.data?.slice(0, 5) || [];
   const recentJobs = jobs?.data?.slice(0, 3) || [];
 
   return (
     <Layout>
-      <div className="p-8 animate-fade-in">
+      <div className="p-8 bg-gradient-to-b from-background to-muted/20 min-h-screen animate-fade-in">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+        <div className="mb-8 text-center">
+          <h1 className="text-5xl font-extrabold mb-3 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
             Dashboard
           </h1>
-          <p className="text-muted-foreground text-lg">Welcome to TalentFlow - Your hiring command center</p>
+          <p className="text-muted-foreground text-lg">
+            Your all-in-one hiring intelligence hub
+          </p>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+        {/* Stats Section */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-10">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <Card 
-                key={stat.title} 
-                className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-t-4 border-t-primary/30 hover:border-t-primary group overflow-hidden relative"
+              <Card
+                key={stat.title}
+                className="group relative overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <CardHeader className="flex flex-row items-center justify-between pb-2 relative">
                   <CardTitle className="text-sm font-medium text-muted-foreground">
                     {stat.title}
                   </CardTitle>
-                  <div className={cn('h-10 w-10 rounded-full flex items-center justify-center', stat.bgColor, 'group-hover:scale-110 transition-transform')}>
+                  <div
+                    className={cn(
+                      'h-10 w-10 rounded-full flex items-center justify-center',
+                      stat.bgColor,
+                      'group-hover:scale-110 transition-transform'
+                    )}
+                  >
                     <Icon className={cn('h-5 w-5', stat.color)} />
                   </div>
                 </CardHeader>
-                <CardContent className="relative">
+                <CardContent>
                   <div className="text-3xl font-bold mb-2">{stat.value}</div>
                   <div className="flex items-center gap-2">
-                    <Badge variant={stat.changeType === 'positive' ? 'default' : 'destructive'} className="text-xs">
+                    <Badge
+                      variant={
+                        stat.changeType === 'positive' ? 'default' : 'destructive'
+                      }
+                      className="text-xs"
+                    >
                       {stat.change}
                     </Badge>
-                    <span className="text-xs text-muted-foreground">vs last month</span>
+                    <span className="text-xs text-muted-foreground">
+                      vs last month
+                    </span>
                   </div>
                 </CardContent>
               </Card>
@@ -115,83 +148,65 @@ export default function Index() {
           })}
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid gap-6 lg:grid-cols-3 mb-8">
+        {/* Quick Actions & Performance */}
+        <div className="grid gap-8 lg:grid-cols-3 mb-10">
           {/* Quick Actions */}
           <div className="lg:col-span-2">
-            <Card className="shadow-xl border-0 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+            <Card className="shadow-lg border-none overflow-hidden relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/10 pointer-events-none" />
               <CardHeader className="relative">
-                <CardTitle className="text-2xl">Quick Actions</CardTitle>
-                <CardDescription className="text-base">Common tasks to manage your hiring pipeline</CardDescription>
+                <CardTitle className="text-2xl font-semibold">
+                  Quick Actions
+                </CardTitle>
+                <CardDescription>
+                  Manage and track your hiring workflow
+                </CardDescription>
               </CardHeader>
               <CardContent className="grid gap-4 md:grid-cols-2 relative">
-                <Link
-                  to="/jobs"
-                  className="group flex items-center gap-4 rounded-xl border-2 p-5 transition-all hover:border-primary hover:shadow-xl hover:-translate-y-1 hover:bg-primary/5"
-                >
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 group-hover:scale-110 transition-transform">
-                    <Briefcase className="h-7 w-7 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-base">Manage Jobs</p>
-                    <p className="text-sm text-muted-foreground">Create and edit positions</p>
-                  </div>
-                </Link>
-
-                <Link
-                  to="/candidates"
-                  className="group flex items-center gap-4 rounded-xl border-2 p-5 transition-all hover:border-accent hover:shadow-xl hover:-translate-y-1 hover:bg-accent/5"
-                >
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-accent/20 to-accent/10 group-hover:scale-110 transition-transform">
-                    <Users className="h-7 w-7 text-accent" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-base">View Candidates</p>
-                    <p className="text-sm text-muted-foreground">Track applicant progress</p>
-                  </div>
-                </Link>
-
-                <Link
-                  to="/assessments"
-                  className="group flex items-center gap-4 rounded-xl border-2 p-5 transition-all hover:border-warning hover:shadow-xl hover:-translate-y-1 hover:bg-warning/5"
-                >
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-warning/20 to-warning/10 group-hover:scale-110 transition-transform">
-                    <ClipboardCheck className="h-7 w-7 text-warning" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-base">Assessments</p>
-                    <p className="text-sm text-muted-foreground">Build and manage tests</p>
-                  </div>
-                </Link>
-
-                <Link
-                  to="/candidates"
-                  className="group flex items-center gap-4 rounded-xl border-2 p-5 transition-all hover:border-success hover:shadow-xl hover:-translate-y-1 hover:bg-success/5"
-                >
-                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-success/20 to-success/10 group-hover:scale-110 transition-transform">
-                    <Award className="h-7 w-7 text-success" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-base">Analytics</p>
-                    <p className="text-sm text-muted-foreground">View hiring metrics</p>
-                  </div>
-                </Link>
+                {quickActions.map((action) => (
+                  <Link
+                    key={action.title}
+                    to={action.link}
+                    className="group flex items-center gap-4 rounded-xl p-5 transition-all hover:shadow-md hover:-translate-y-1 hover:bg-primary/5"
+                  >
+                    <div
+                      className={cn(
+                        'flex h-14 w-14 items-center justify-center rounded-xl',
+                        action.bg
+                      )}
+                    >
+                      <action.icon
+                        className={cn('h-7 w-7', action.color)}
+                      />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-base">{action.title}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {action.desc}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
               </CardContent>
             </Card>
           </div>
 
           {/* Performance Metrics */}
           <div className="space-y-6">
-            <Card>
+            {/* Conversion Rate */}
+            <Card className="border-none shadow-md">
               <CardHeader>
-                <CardTitle className="text-lg">Conversion Rate</CardTitle>
-                <CardDescription>Hiring success rate</CardDescription>
+                <CardTitle className="text-lg font-semibold">
+                  Conversion Rate
+                </CardTitle>
+                <CardDescription>Hiring success overview</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold">{conversionRate}%</span>
+                    <span className="text-2xl font-bold text-primary">
+                      {conversionRate}%
+                    </span>
                     <Target className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <Progress value={conversionRate} className="h-2" />
@@ -202,21 +217,31 @@ export default function Index() {
               </CardContent>
             </Card>
 
-            <Card>
+            {/* Recent Activity */}
+            <Card className="border-none shadow-md">
               <CardHeader>
-                <CardTitle className="text-lg">Recent Activity</CardTitle>
-                <CardDescription>Latest updates</CardDescription>
+                <CardTitle className="text-lg font-semibold">
+                  Recent Activity
+                </CardTitle>
+                <CardDescription>Latest candidate updates</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   {recentCandidates.slice(0, 3).map((candidate: any) => (
-                    <div key={candidate.id} className="flex items-center gap-3">
+                    <div
+                      key={candidate.id}
+                      className="flex items-center gap-3 hover:bg-muted/30 p-2 rounded-lg transition-all"
+                    >
                       <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
                         <Users className="h-4 w-4 text-primary" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">{candidate.name}</p>
-                        <p className="text-xs text-muted-foreground">{candidate.stage}</p>
+                        <p className="text-sm font-medium truncate">
+                          {candidate.name}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {candidate.stage}
+                        </p>
                       </div>
                       <Badge variant="outline" className="text-xs">
                         {candidate.stage}
@@ -230,24 +255,32 @@ export default function Index() {
         </div>
 
         {/* Recent Jobs */}
-        <Card>
+        <Card className="shadow-lg border-none">
           <CardHeader>
-            <CardTitle className="text-xl">Recent Job Postings</CardTitle>
-            <CardDescription>Your latest job openings</CardDescription>
+            <CardTitle className="text-xl font-semibold">
+              Recent Job Postings
+            </CardTitle>
+            <CardDescription>Your latest active openings</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {recentJobs.map((job: any) => (
                 <Link key={job.id} to={`/jobs/${job.id}`}>
-                  <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                  <Card className="hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer border rounded-xl">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-2">
                         <h3 className="font-semibold text-base">{job.title}</h3>
-                        <Badge variant={job.status === 'active' ? 'default' : 'secondary'}>
+                        <Badge
+                          variant={
+                            job.status === 'active' ? 'default' : 'secondary'
+                          }
+                        >
                           {job.status}
                         </Badge>
                       </div>
-                      <p className="text-sm text-muted-foreground mb-2">{job.location}</p>
+                      <p className="text-sm text-muted-foreground mb-2">
+                        {job.location}
+                      </p>
                       <div className="flex gap-1 flex-wrap">
                         {job.tags.slice(0, 2).map((tag: string) => (
                           <Badge key={tag} variant="outline" className="text-xs">
@@ -266,6 +299,41 @@ export default function Index() {
     </Layout>
   );
 }
+
+const quickActions = [
+  {
+    title: 'Manage Jobs',
+    desc: 'Create and edit job openings',
+    icon: Briefcase,
+    link: '/jobs',
+    bg: 'bg-primary/10',
+    color: 'text-primary',
+  },
+  {
+    title: 'View Candidates',
+    desc: 'Track applicant progress',
+    icon: Users,
+    link: '/candidates',
+    bg: 'bg-accent/10',
+    color: 'text-accent',
+  },
+  {
+    title: 'Assessments',
+    desc: 'Create and assign tests',
+    icon: ClipboardCheck,
+    link: '/assessments',
+    bg: 'bg-warning/10',
+    color: 'text-warning',
+  },
+  {
+    title: 'Analytics',
+    desc: 'View hiring insights',
+    icon: Award,
+    link: '/analytics',
+    bg: 'bg-success/10',
+    color: 'text-success',
+  },
+];
 
 function cn(...args: any[]) {
   return args.filter(Boolean).join(' ');

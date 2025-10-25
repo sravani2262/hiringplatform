@@ -11,6 +11,7 @@ A comprehensive React-based hiring platform for managing jobs, candidates, and a
 ## 📋 Features
 
 ### ✅ Jobs Management
+
 - Create, edit, and archive job postings
 - Server-like pagination and filtering (title, status, tags)
 - Drag-and-drop reordering with optimistic updates and error rollback
@@ -18,6 +19,7 @@ A comprehensive React-based hiring platform for managing jobs, candidates, and a
 - Validation (required title, unique slug generation)
 
 ### ✅ Candidates Management
+
 - Virtualized list handling 1,000+ candidates efficiently
 - Client-side search by name/email
 - Server-like stage filtering
@@ -26,6 +28,7 @@ A comprehensive React-based hiring platform for managing jobs, candidates, and a
 - Stage transition tracking with user attribution
 
 ### ✅ Assessments
+
 - Assessment builder per job (foundation implemented)
 - Supports multiple question types:
   - Single-choice
@@ -72,6 +75,7 @@ The application will be available at `http://localhost:8080`
 ## 🏗️ Architecture
 
 ### File Structure
+
 ```
 src/
 ├── components/
@@ -112,6 +116,7 @@ src/
 ### Design System
 
 The application uses a professional design system with:
+
 - Purple/blue gradient primary colors
 - Status-specific colors for candidate stages
 - Consistent spacing and typography
@@ -132,18 +137,21 @@ The application automatically seeds the following on first load:
 MSW simulates the following endpoints with artificial latency (200-1200ms) and 5-10% error rate:
 
 ### Jobs
+
 - `GET /api/jobs` - List jobs with search, filter, pagination, sort
 - `POST /api/jobs` - Create new job
 - `PATCH /api/jobs/:id` - Update job
 - `PATCH /api/jobs/:id/reorder` - Reorder jobs (with occasional 500 errors for rollback testing)
 
 ### Candidates
+
 - `GET /api/candidates` - List candidates with search, filter, pagination
 - `POST /api/candidates` - Create candidate
 - `PATCH /api/candidates/:id` - Update candidate (stage transitions)
 - `GET /api/candidates/:id/timeline` - Get candidate timeline
 
 ### Assessments
+
 - `GET /api/assessments/:jobId` - Get assessment for job
 - `PUT /api/assessments/:jobId` - Create/update assessment
 - `POST /api/assessments/:jobId/submit` - Submit assessment response
@@ -151,23 +159,29 @@ MSW simulates the following endpoints with artificial latency (200-1200ms) and 5
 ## 🎯 Key Features Implemented
 
 ### Optimistic Updates with Rollback
+
 Jobs reordering uses optimistic updates - changes appear immediately, but roll back if the server returns an error.
 
 ### Deep Linking
+
 All major entities support direct URLs:
+
 - `/jobs/:jobId` - Direct link to job details
 - `/candidates/:id` - Direct link to candidate profile
 
 ### Drag & Drop
+
 - Jobs can be reordered via drag-and-drop
 - Candidates can be moved between stages on kanban board
 
 ### Performance Optimizations
+
 - Candidates list handles 1,000+ items efficiently
 - Client-side search and filtering for instant results
 - Query caching with TanStack Query
 
 ### Error Handling
+
 - Toast notifications for success/error states
 - Network error simulation for testing resilience
 - Graceful error boundaries
@@ -175,26 +189,32 @@ All major entities support direct URLs:
 ## 📝 Technical Decisions
 
 ### Why MSW over traditional mocking?
+
 MSW intercepts requests at the network level, providing realistic API behavior including latency, errors, and proper HTTP semantics.
 
 ### Why Dexie for storage?
+
 Dexie provides a clean, Promise-based API over IndexedDB with excellent TypeScript support and query capabilities.
 
 ### Why @dnd-kit over react-beautiful-dnd?
+
 @dnd-kit is more modern, actively maintained, performant, and provides better TypeScript support.
 
 ### Why TanStack Query?
+
 Provides excellent caching, optimistic updates, error handling, and reduces boilerplate for data fetching.
 
 ## 🐛 Known Issues & Future Enhancements
 
 ### Current Limitations
+
 1. Assessment builder is a foundation - full question builder UI needs implementation
 2. File upload in assessments is a stub
 3. Candidate notes with @mentions render but don't have suggestion dropdown
 4. No actual authentication system
 
 ### Planned Features
+
 1. Full assessment builder with drag-and-drop questions
 2. Rich text editor for job descriptions
 3. Email integration for candidate communication
@@ -205,6 +225,7 @@ Provides excellent caching, optimistic updates, error handling, and reduces boil
 ## 🧪 Testing Considerations
 
 The application includes:
+
 - Artificial network latency (200-1200ms)
 - 5-10% error rate on write operations
 - Optimistic updates with rollback on failure
@@ -213,21 +234,3 @@ The application includes:
 ## 📱 Browser Support
 
 Modern browsers (Chrome, Firefox, Safari, Edge) with IndexedDB support.
-
-## 🤝 Contributing
-
-This is a technical assignment project. For production use, consider:
-- Adding proper authentication/authorization
-- Implementing backend API
-- Adding comprehensive tests
-- Setting up CI/CD pipeline
-- Adding error tracking (Sentry, etc.)
-- Performance monitoring
-
-## 📄 License
-
-This project is for demonstration purposes.
-
----
-
-**Built with ❤️ using React, TypeScript, and modern web technologies**
