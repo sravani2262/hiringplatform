@@ -31,32 +31,32 @@ function SortableJobCard({ job, onArchiveToggle }: { job: Job; onArchiveToggle: 
       className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-l-4 border-l-primary/40 hover:border-l-primary group overflow-hidden relative"
     >
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-      <CardHeader className="flex flex-row items-start justify-between space-y-0 relative">
-        <div className="flex-1">
-          <div className="flex items-center gap-3">
+      <CardHeader className="flex flex-col sm:flex-row items-start justify-between space-y-0 relative gap-3 sm:gap-0">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               {...attributes}
               {...listeners}
               aria-label="Drag job"
-              className="cursor-grab hover:text-primary active:cursor-grabbing transition-colors"
+              className="cursor-grab hover:text-primary active:cursor-grabbing transition-colors shrink-0"
               type="button"
               onClick={(e) => e.stopPropagation()}
             >
-              <GripVertical className="h-5 w-5" />
+              <GripVertical className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
-            <Link to={`/jobs/${job.id}`} className="group/link">
-              <CardTitle className="text-xl font-semibold group-hover/link:text-primary transition-colors">
+            <Link to={`/jobs/${job.id}`} className="group/link flex-1 min-w-0">
+              <CardTitle className="text-lg sm:text-xl font-semibold group-hover/link:text-primary transition-colors truncate">
                 {job.title}
               </CardTitle>
             </Link>
           </div>
-          <CardDescription className="mt-2 flex items-center gap-2 text-base">
-            <span>{job.location}</span>
-            <span className="text-muted-foreground/50">•</span>
-            <span>{job.type}</span>
+          <CardDescription className="mt-2 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-sm sm:text-base">
+            <span className="truncate">{job.location}</span>
+            <span className="text-muted-foreground/50 hidden sm:inline">•</span>
+            <span className="truncate">{job.type}</span>
           </CardDescription>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
           <Badge
             variant={job.status === 'active' ? 'default' : 'secondary'}
             className={job.status === 'active' ? 'shadow-md shadow-primary/20' : ''}
@@ -73,12 +73,12 @@ function SortableJobCard({ job, onArchiveToggle }: { job: Job; onArchiveToggle: 
             </Badge>
           ))}
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Button
             type="button"
             size="sm"
             variant="outline"
-            className="hover:border-primary hover:text-primary transition-colors"
+            className="hover:border-primary hover:text-primary transition-colors flex-1 sm:flex-none"
             onClick={(e) => {
               e.stopPropagation(); // prevent drag click
               navigate(`/jobs/${job.id}/edit`);
@@ -92,7 +92,7 @@ function SortableJobCard({ job, onArchiveToggle }: { job: Job; onArchiveToggle: 
             type="button"
             size="sm"
             variant="outline"
-            className="hover:border-primary hover:text-primary transition-colors"
+            className="hover:border-primary hover:text-primary transition-colors flex-1 sm:flex-none"
             onClick={async (e) => {
               e.stopPropagation(); // prevent drag click
               const newStatus = job.status === 'active' ? 'archived' : 'active';
@@ -293,12 +293,12 @@ export function JobsList() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Filters */}
       <Card className="shadow-lg border-0 bg-card/50 backdrop-blur">
-        <CardContent className="pt-6">
-          <div className="flex gap-4 flex-wrap">
-            <div className="flex-1 min-w-[200px]">
+        <CardContent className="pt-4 sm:pt-6">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1 min-w-0">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
@@ -324,7 +324,7 @@ export function JobsList() {
               </div>
             </div>
             <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger className="w-[180px] h-11 border-2 focus:border-primary transition-colors">
+              <SelectTrigger className="w-full sm:w-[180px] h-11 border-2 focus:border-primary transition-colors">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -338,7 +338,7 @@ export function JobsList() {
       </Card>
 
       {/* Jobs List */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {/* Search Results Info */}
         {debouncedSearch && (
           <div className="text-sm text-muted-foreground">
@@ -354,7 +354,7 @@ export function JobsList() {
 
         <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={data?.data?.map((j: Job) => j.id) || []} strategy={verticalListSortingStrategy}>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {data?.data?.map((job: Job) => (
                 <SortableJobCard key={job.id} job={job} onArchiveToggle={handleArchiveToggle} />
               ))}
@@ -365,7 +365,7 @@ export function JobsList() {
 
       {/* Pagination */}
       {data && data.total > 10 && (
-        <div className="flex justify-center gap-2 mt-6">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 mt-6">
           <Button
             variant="outline"
             onClick={() => setPage((p) => Math.max(1, p - 1))}

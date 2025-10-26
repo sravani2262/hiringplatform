@@ -198,19 +198,19 @@ export default function Index() {
 
   return (
     <Layout>
-      <div className="p-8 bg-gradient-to-b from-background to-muted/20 min-h-screen animate-fade-in">
+      <div className="p-4 sm:p-6 lg:p-8 bg-gradient-to-b from-background to-muted/20 min-h-screen animate-fade-in">
         {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-5xl font-extrabold mb-3 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
+        <div className="mb-6 sm:mb-8 text-center">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-2 sm:mb-3 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
             Dashboard
           </h1>
-          <p className="text-muted-foreground text-lg">
+          <p className="text-muted-foreground text-base sm:text-lg px-4">
             Your all-in-one hiring intelligence hub
           </p>
         </div>
 
         {/* Stats Section */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-10">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-8 sm:mb-10">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
@@ -235,8 +235,8 @@ export default function Index() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold mb-2">{stat.value}</div>
-                  <div className="flex items-center gap-2">
+                  <div className="text-2xl sm:text-3xl font-bold mb-2">{stat.value}</div>
+                  <div className="flex items-center gap-2 flex-wrap">
                     <Badge
                       variant={
                         stat.changeType === 'positive' ? 'default' : 'destructive'
@@ -256,7 +256,7 @@ export default function Index() {
         </div>
 
         {/* Quick Actions & Performance */}
-        <div className="grid gap-8 lg:grid-cols-3 mb-10">
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-3 mb-8 sm:mb-10">
           {/* Quick Actions */}
           <div className="lg:col-span-2">
             <Card className="shadow-lg border-none overflow-hidden relative">
@@ -269,7 +269,7 @@ export default function Index() {
                   Manage and track your hiring workflow
                 </CardDescription>
               </CardHeader>
-              <CardContent className="grid gap-4 md:grid-cols-2 relative">
+              <CardContent className="grid gap-4 grid-cols-1 sm:grid-cols-2 relative">
                 {quickActions.map((action) => (
                   <Link
                     key={action.title}
@@ -286,7 +286,7 @@ export default function Index() {
                         className={cn('h-7 w-7', action.color)}
                       />
                     </div>
-                    <div>
+                    <div className="flex-1 min-w-0">
                       <p className="font-semibold text-base">{action.title}</p>
                       <p className="text-sm text-muted-foreground">
                         {action.desc}
@@ -299,7 +299,7 @@ export default function Index() {
           </div>
 
           {/* Performance Metrics */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Conversion Rate */}
             <Card className="border-none shadow-md">
               <CardHeader>
@@ -311,10 +311,10 @@ export default function Index() {
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-primary">
+                    <span className="text-xl sm:text-2xl font-bold text-primary">
                       {conversionRate}%
                     </span>
-                    <Target className="h-5 w-5 text-muted-foreground" />
+                    <Target className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                   </div>
                   <Progress value={conversionRate} className="h-2" />
                   <p className="text-sm text-muted-foreground">
@@ -370,17 +370,18 @@ export default function Index() {
             <CardDescription>Your latest active openings</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {recentJobs.map((job: any) => (
                 <Link key={job.id} to={`/jobs/${job.id}`}>
                   <Card className="hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer border rounded-xl">
                     <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-semibold text-base">{job.title}</h3>
+                      <div className="flex items-start justify-between mb-2 gap-2">
+                        <h3 className="font-semibold text-base flex-1 min-w-0">{job.title}</h3>
                         <Badge
                           variant={
                             job.status === 'active' ? 'default' : 'secondary'
                           }
+                          className="shrink-0"
                         >
                           {job.status}
                         </Badge>

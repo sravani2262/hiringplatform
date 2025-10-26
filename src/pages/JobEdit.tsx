@@ -137,18 +137,19 @@ export default function JobEdit() {
 
   return (
     <Layout>
-      <div className="p-8">
-        <div className="mb-6 flex items-center justify-between">
+      <div className="p-4 sm:p-6 lg:p-8">
+        <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <Link to={`/jobs/${jobId}`}>
             <Button variant="ghost" className="gap-2">
               <ArrowLeft className="h-4 w-4" />
               Back to Job Details
             </Button>
           </Link>
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
             <Button
               variant="outline"
               onClick={() => navigate(`/jobs/${jobId}`)}
+              className="flex-1 sm:flex-none"
             >
               <X className="mr-2 h-4 w-4" />
               Cancel
@@ -156,7 +157,7 @@ export default function JobEdit() {
             <Button
               onClick={handleSubmit}
               disabled={mutation.isPending}
-              className="gap-2"
+              className="gap-2 flex-1 sm:flex-none"
             >
               <Save className="h-4 w-4" />
               {mutation.isPending ? 'Saving...' : 'Save Changes'}
@@ -171,7 +172,7 @@ export default function JobEdit() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid gap-6 md:grid-cols-2">
+                <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="title">Job Title *</Label>
                     <Input
@@ -206,7 +207,7 @@ export default function JobEdit() {
                   />
                 </div>
 
-                <div className="grid gap-6 md:grid-cols-3">
+                <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                   <div className="space-y-2">
                     <Label htmlFor="location">Location</Label>
                     <Input

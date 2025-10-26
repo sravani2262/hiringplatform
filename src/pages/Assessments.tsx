@@ -157,21 +157,21 @@ export default function Assessments() {
 
   return (
     <Layout>
-      <div className="p-8">
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Assessments</h1>
-            <p className="text-muted-foreground">Create and manage job-specific assessments and quizzes</p>
+      <div className="p-4 sm:p-6 lg:p-8">
+        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2">Assessments</h1>
+            <p className="text-muted-foreground text-sm sm:text-base">Create and manage job-specific assessments and quizzes</p>
           </div>
-          <div className="flex gap-2">
-            <Link to="/assessments/demo">
-              <Button variant="outline" className="gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <Link to="/assessments/demo" className="w-full sm:w-auto">
+              <Button variant="outline" className="gap-2 w-full sm:w-auto">
                 <Play className="h-4 w-4" />
                 Try Demo
               </Button>
             </Link>
-            <Link to="/jobs">
-              <Button className="gap-2">
+            <Link to="/jobs" className="w-full sm:w-auto">
+              <Button className="gap-2 w-full sm:w-auto">
                 <Plus className="h-4 w-4" />
                 Create Job
               </Button>
@@ -180,7 +180,7 @@ export default function Assessments() {
         </div>
 
         {/* Summary Cards */}
-        <div className="grid gap-4 md:grid-cols-3 mb-8">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-6 sm:mb-8">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Total Jobs</CardTitle>
@@ -263,7 +263,7 @@ export default function Assessments() {
                   <ClipboardCheck className="h-5 w-5" />
                   Existing Assessments ({assessments.length})
                 </h2>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-6">
+                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-6">
                   {assessments.map((assessment: any) => {
                     const job = allJobs.find((j: any) => j.id === assessment.jobId);
                     return (
@@ -329,7 +329,7 @@ export default function Assessments() {
                 </CardHeader>
               </Card>
 
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-4">
                 {activeJobs.map((job: any) => {
                   const hasAssessment = assessments.some((a: any) => a.jobId === job.id);
                   return (

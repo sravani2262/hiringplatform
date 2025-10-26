@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mobile-specific fixes */
+@layer base {
+  html, body {
+    height: 100%;
+    overflow-x: hidden;
+  }
+  
+  #root {
+    height: 100%;
+  }
+  
+  /* Ensure mobile layout works properly */
+  @media (max-width: 1023px) {
+    .mobile-layout {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+  }
+}
+
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */

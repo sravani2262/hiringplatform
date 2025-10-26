@@ -36,9 +36,9 @@ export default function JobDetail() {
   if (!job) {
     return (
       <Layout>
-        <div className="p-8">
+        <div className="p-4 sm:p-6 lg:p-8">
           <div className="text-center">
-            <h2 className="text-2xl font-bold mb-4">Job not found</h2>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4">Job not found</h2>
             <Link to="/jobs">
               <Button variant="outline">
                 <ArrowLeft className="mr-2 h-4 w-4" />
@@ -53,7 +53,7 @@ export default function JobDetail() {
 
   return (
     <Layout>
-      <div className="p-8">
+      <div className="p-4 sm:p-6 lg:p-8">
         <Link to="/jobs">
           <Button variant="ghost" className="mb-6">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -62,9 +62,9 @@ export default function JobDetail() {
         </Link>
 
         <div className="mb-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">{job.title}</h1>
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-4 gap-4">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl sm:text-3xl font-bold mb-2">{job.title}</h1>
               <div className="flex gap-2 flex-wrap">
                 <Badge variant={job.status === 'active' ? 'default' : 'secondary'}>
                   {job.status}
@@ -76,21 +76,21 @@ export default function JobDetail() {
                 ))}
               </div>
             </div>
-            <div className="flex gap-2">
-              <Link to={`/jobs/${job.id}/edit`}>
-                <Button>
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              <Link to={`/jobs/${job.id}/edit`} className="flex-1 sm:flex-none">
+                <Button className="w-full sm:w-auto">
                   <Edit className="mr-2 h-4 w-4" />
                   Edit Job
                 </Button>
               </Link>
-              <Button variant="outline">
+              <Button variant="outline" className="flex-1 sm:flex-none">
                 <Users className="mr-2 h-4 w-4" />
                 View Candidates
               </Button>
             </div>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3 mt-6">
+          <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-6">
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm font-medium text-muted-foreground">Location</CardTitle>
