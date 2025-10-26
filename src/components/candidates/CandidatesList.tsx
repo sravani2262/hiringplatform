@@ -36,14 +36,28 @@ const stageColors: Record<string, string> = {
 export function CandidatesList() {
   const [search, setSearch] = useState("");
   const [stage, setStage] = useState("all");
+  const [page, setPage] = useState(1);
+  const pageSize = 50;
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["candidates"],
+  interface CandidatesResponse {
+    data: Candidate[];
+    total: number;
+  }
+
+  const { data, isLoading } = useQuery<CandidatesResponse>({
+    queryKey: ["candidates", page, search, stage],
     queryFn: async () => {
-      const res = await fetch("/api/candidates?pageSize=1000");
+      const params = new URLSearchParams({
+        page: String(page),
+        pageSize: String(pageSize),
+        search: search,
+        stage: stage === "all" ? "" : stage
+      });
+      const res = await fetch(`/api/candidates?${params}`);
       if (!res.ok) throw new Error("Failed to fetch candidates");
       return res.json();
     },
+    placeholderData: (previousData) => previousData,
   });
 
   // Client-side filtering for search and stage
@@ -160,6 +174,31 @@ export function CandidatesList() {
           </Link>
         ))}
       </div>
+
+      {/* Pagination */}
+      {data && (
+        <div className="flex items-center justify-between py-4">
+          <p className="text-sm text-muted-foreground">
+            Showing page {page} of {Math.ceil(data.total / pageSize)}
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="px-3 py-2 text-sm font-medium rounded-md bg-secondary hover:bg-secondary/80 disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setPage(p => p + 1)}
+              disabled={page >= Math.ceil(data.total / pageSize)}
+              className="px-3 py-2 text-sm font-medium rounded-md bg-secondary hover:bg-secondary/80 disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

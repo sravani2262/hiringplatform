@@ -129,7 +129,12 @@ export function JobsList() {
     setPage(1);
   }, [debouncedSearch, status]);
 
-  const { data, isLoading } = useQuery({
+  interface JobsResponse {
+    data: Job[];
+    total: number;
+  }
+
+  const { data, isLoading } = useQuery<JobsResponse>({
     queryKey: ['jobs', debouncedSearch, status, page],
     queryFn: async () => {
       const params = new URLSearchParams({
@@ -145,7 +150,33 @@ export function JobsList() {
       if (!res.ok) throw new Error('Failed to fetch jobs');
       return res.json();
     },
+    staleTime: 1000 * 60 * 2, // 2 minutes
+    placeholderData: (previousData) => previousData,
   });
+
+  // Prefetch next page
+  useEffect(() => {
+    if (data && page < Math.ceil(data.total / 10)) {
+      const nextPage = page + 1;
+      queryClient.prefetchQuery({
+        queryKey: ['jobs', debouncedSearch, status, nextPage],
+        queryFn: async () => {
+          const params = new URLSearchParams({
+            search: debouncedSearch,
+            page: nextPage.toString(),
+            pageSize: '10',
+            sort: 'order',
+          });
+          if (status !== 'all') {
+            params.set('status', status);
+          }
+          const res = await fetch(`/api/jobs?${params}`);
+          if (!res.ok) throw new Error('Failed to fetch jobs');
+          return res.json();
+        },
+      });
+    }
+  }, [data, page, debouncedSearch, status, queryClient]);
 
   // Reorder mutation (kept mostly as you had it)
   const reorderMutation = useMutation({
@@ -333,8 +364,8 @@ export function JobsList() {
       </div>
 
       {/* Pagination */}
-      {data?.pagination && data.pagination.totalPages > 1 && (
-        <div className="flex justify-center gap-2">
+      {data && data.total > 10 && (
+        <div className="flex justify-center gap-2 mt-6">
           <Button
             variant="outline"
             onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -344,13 +375,13 @@ export function JobsList() {
           </Button>
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">
-              Page {page} of {data.pagination.totalPages}
+              Page {page} of {Math.ceil(data.total / 10)}
             </span>
           </div>
           <Button
             variant="outline"
             onClick={() => setPage((p) => p + 1)}
-            disabled={page >= data.pagination.totalPages}
+            disabled={page >= Math.ceil(data.total / 10)}
           >
             Next
           </Button>
