@@ -4,10 +4,7 @@ import "./index.css";
 
 // Start MSW worker
 async function enableMocking() {
-  if (import.meta.env.MODE !== 'development') {
-    return;
-  }
-
+  // Enable MSW in both development and production for demo purposes
   const { worker } = await import('./mocks/browser');
 
   return worker.start({
