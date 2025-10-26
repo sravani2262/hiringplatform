@@ -105,22 +105,10 @@ export function Layout({ children }: LayoutProps) {
               </SheetTrigger>
               <SheetContent 
                 side="left" 
-                className="w-64 bg-[#0f172a] text-white border-r border-white/10 p-0"
+                className="w-64 bg-[#0f172a] text-white border-r border-white/10 p-0 [&>button]:text-white"
                 onInteractOutside={() => setIsMobileMenuOpen(false)}
               >
                 <div className="flex flex-col h-full">
-                  {/* Close button for mobile */}
-                  <div className="flex justify-end p-4 lg:hidden">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="text-white hover:bg-white/10"
-                      aria-label="Close navigation menu"
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
                   <NavigationContent isMobile={true} />
                 </div>
               </SheetContent>

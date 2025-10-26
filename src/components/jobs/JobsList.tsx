@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Search, GripVertical, Archive, Edit, X } from 'lucide-react';
 import { Job } from '@/lib/db';
 import { Link, useNavigate } from 'react-router-dom';
@@ -219,7 +220,6 @@ export function JobsList() {
   // Archive / Unarchive mutation
   const archiveMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: string }) => {
-      // NOTE: adjust endpoint/payload if your API differs.
       const res = await fetch(`/api/jobs/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -232,9 +232,13 @@ export function JobsList() {
       return res.json();
     },
     onMutate: async ({ id, status: newStatus }) => {
-      await queryClient.cancelQueries({ queryKey: ['jobs', debouncedSearch, status, page] });
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ['jobs'] });
+      
+      // Snapshot the previous value
       const previousData = queryClient.getQueryData(['jobs', debouncedSearch, status, page]);
 
+      // Optimistically update the cache
       queryClient.setQueryData(['jobs', debouncedSearch, status, page], (old: any) => {
         if (!old) return old;
         const jobs = old.data.map((j: Job) => (j.id === id ? { ...j, status: newStatus } : j));
@@ -244,24 +248,27 @@ export function JobsList() {
       return { previousData };
     },
     onError: (err, variables, context) => {
+      // Rollback on error
       if (context?.previousData) {
         queryClient.setQueryData(['jobs', debouncedSearch, status, page], context.previousData);
       }
       toast.error('Failed to update job status. Please try again.');
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['jobs', debouncedSearch, status, page] });
+    onSuccess: (data, variables) => {
+      // Invalidate all job queries to ensure consistency across the app
+      queryClient.invalidateQueries({ queryKey: ['jobs'] });
+      const statusText = variables.status === 'archived' ? 'archived' : 'unarchived';
+      toast.success(`Job ${statusText} successfully`);
     },
   });
 
-  // Helper wrapper to call archive mutation and show toasts
+  // Helper wrapper to call archive mutation
   const handleArchiveToggle = async (id: string, newStatus: string) => {
     try {
       await archiveMutation.mutateAsync({ id, status: newStatus });
-      toast.success(newStatus === 'archived' ? 'Job archived' : 'Job restored');
     } catch (err: any) {
-      // error toast handled in onError, but keep this for extra safety
-      toast.error(err?.message || 'Something went wrong');
+      // Error toast is already handled in onError callback
+      console.error('Failed to toggle job status:', err);
     }
   };
 
@@ -352,15 +359,41 @@ export function JobsList() {
           </div>
         )}
 
-        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={data?.data?.map((j: Job) => j.id) || []} strategy={verticalListSortingStrategy}>
-            <div className="space-y-3 sm:space-y-4">
-              {data?.data?.map((job: Job) => (
-                <SortableJobCard key={job.id} job={job} onArchiveToggle={handleArchiveToggle} />
-              ))}
-            </div>
-          </SortableContext>
-        </DndContext>
+        {isLoading ? (
+          <div className="space-y-3 sm:space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <Card key={i} className="animate-pulse">
+                <CardHeader className="flex flex-col sm:flex-row items-start justify-between space-y-0 relative gap-3 sm:gap-0">
+                  <div className="flex-1 min-w-0 space-y-2">
+                    <Skeleton className="h-6 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                  <Skeleton className="h-6 w-16" />
+                </CardHeader>
+                <CardContent>
+                  <div className="flex gap-2 mb-4">
+                    <Skeleton className="h-6 w-20" />
+                    <Skeleton className="h-6 w-16" />
+                  </div>
+                  <div className="flex gap-2">
+                    <Skeleton className="h-9 flex-1" />
+                    <Skeleton className="h-9 flex-1" />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={data?.data?.map((j: Job) => j.id) || []} strategy={verticalListSortingStrategy}>
+              <div className="space-y-3 sm:space-y-4">
+                {data?.data?.map((job: Job) => (
+                  <SortableJobCard key={job.id} job={job} onArchiveToggle={handleArchiveToggle} />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+        )}
       </div>
 
       {/* Pagination */}

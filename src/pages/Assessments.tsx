@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { ClipboardCheck, FileQuestion, AlertCircle, Plus, Edit, Eye, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
@@ -21,6 +22,8 @@ export default function Assessments() {
       const res = await fetch('/api/jobs?pageSize=100');
       return res.json();
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    placeholderData: (previousData) => previousData,
   });
 
   const { data: assessmentsResponse, isLoading: assessmentsLoading } = useQuery({
@@ -30,6 +33,8 @@ export default function Assessments() {
       if (!res.ok) throw new Error('Failed to fetch assessments');
       return res.json();
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    placeholderData: (previousData) => previousData,
   });
 
   const activeJobs = jobsResponse?.data?.filter((j: any) => j.status === 'active') || [];
@@ -140,14 +145,23 @@ export default function Assessments() {
   if (jobsLoading || assessmentsLoading) {
     return (
       <Layout>
-        <div className="p-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Assessments</h1>
-            <p className="text-muted-foreground">Create and manage job-specific assessments and quizzes</p>
+        <div className="p-4 sm:p-6 lg:p-8">
+          <div className="mb-6 sm:mb-8">
+            <Skeleton className="h-8 w-48 mb-2" />
+            <Skeleton className="h-4 w-80" />
           </div>
-          <div className="space-y-4">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-8">
             {[1, 2, 3].map((i) => (
-              <Card key={i} className="h-32 animate-pulse bg-muted" />
+              <Card key={i}>
+                <CardHeader>
+                  <Skeleton className="h-5 w-32 mb-2" />
+                  <Skeleton className="h-4 w-full" />
+                </CardHeader>
+                <CardContent>
+                  <Skeleton className="h-8 w-20 mb-2" />
+                  <Skeleton className="h-4 w-full" />
+                </CardContent>
+              </Card>
             ))}
           </div>
         </div>

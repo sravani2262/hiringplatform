@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Search, Mail } from "lucide-react";
 import { Candidate } from "@/lib/db";
 import { Link } from "react-router-dom";
@@ -42,6 +43,11 @@ export function CandidatesList() {
   interface CandidatesResponse {
     data: Candidate[];
     total: number;
+    pagination?: {
+      page: number;
+      total: number;
+      totalPages: number;
+    };
   }
 
   const { data, isLoading } = useQuery<CandidatesResponse>({
@@ -57,6 +63,7 @@ export function CandidatesList() {
       if (!res.ok) throw new Error("Failed to fetch candidates");
       return res.json();
     },
+    staleTime: 1000 * 60 * 2, // 2 minutes
     placeholderData: (previousData) => previousData,
   });
 
@@ -86,7 +93,20 @@ export function CandidatesList() {
     return (
       <div className="space-y-4">
         {[1, 2, 3, 4, 5].map((i) => (
-          <Card key={i} className="h-20 animate-pulse bg-muted" />
+          <Card key={i}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4 flex-1">
+                  <Skeleton className="h-12 w-12 rounded-full" />
+                  <div className="space-y-2 flex-1">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-3 w-48" />
+                  </div>
+                </div>
+                <Skeleton className="h-6 w-20" />
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     );
@@ -127,7 +147,7 @@ export function CandidatesList() {
 
       {/* Stats */}
       <div className="text-sm text-muted-foreground">
-        Showing {filteredCandidates.length} of {data?.data?.length || 0}{" "}
+        Showing {filteredCandidates.length} of {data?.pagination?.total || data?.total || filteredCandidates.length}{" "}
         candidates
       </div>
 
@@ -179,7 +199,7 @@ export function CandidatesList() {
       {data && (
         <div className="flex items-center justify-between py-4">
           <p className="text-sm text-muted-foreground">
-            Showing page {page} of {Math.ceil(data.total / pageSize)}
+            Showing page {page} of {data.pagination?.totalPages || Math.ceil((data.pagination?.total || data.total || 0) / pageSize)}
           </p>
           <div className="flex gap-2">
             <button
@@ -191,7 +211,7 @@ export function CandidatesList() {
             </button>
             <button
               onClick={() => setPage(p => p + 1)}
-              disabled={page >= Math.ceil(data.total / pageSize)}
+              disabled={page >= (data.pagination?.totalPages || Math.ceil((data.pagination?.total || data.total || 0) / pageSize))}
               className="px-3 py-2 text-sm font-medium rounded-md bg-secondary hover:bg-secondary/80 disabled:opacity-50"
             >
               Next
