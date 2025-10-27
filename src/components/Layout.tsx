@@ -78,8 +78,14 @@ export function Layout({ children }: LayoutProps) {
         })}
       </nav>
 
-      {/* Footer */}
-      
+      {/* Enhanced Footer */}
+      <div className="mt-auto p-6 border-t border-white/10">
+        <div className="flex flex-col items-center gap-4">
+         
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          
+        </div>
+      </div>
     </>
   );
 

@@ -4,7 +4,7 @@ import { ResponseViewer } from '@/components/assessments/ResponseViewer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { ClipboardCheck, FileQuestion, AlertCircle, Plus, Edit, Eye, Play } from 'lucide-react';
+import { ClipboardCheck, FileQuestion, AlertCircle, Plus, Edit, Eye, Play, Target, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -171,63 +171,158 @@ export default function Assessments() {
 
   return (
     <Layout>
-      <div className="p-4 sm:p-6 lg:p-8">
-        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-2xl sm:text-3xl font-bold mb-2">Assessments</h1>
-            <p className="text-muted-foreground text-sm sm:text-base">Create and manage job-specific assessments and quizzes</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 container-responsive">
+        {/* Enhanced Header Section */}
+        <div className="relative mb-16 text-center pt-8">
+          {/* Background elements */}
+          <div className="absolute inset-0 bg-gradient-radial from-emerald-400/8 via-blue-400/4 to-transparent pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-emerald-400/15 to-blue-400/15 rounded-full blur-3xl opacity-30" />
+          
+          {/* Header content */}
+          <div className="relative mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-emerald-400/20 mb-6">
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-sm font-medium text-slate-600">Assessment Center</span>
+            </div>
+            
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black mb-6 gradient-text-rainbow tracking-tight">
+              Assessments
+            </h1>
+            
+            <p className="text-slate-600 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed mb-8">
+              Create intelligent assessments and evaluate candidates with precision
+            </p>
+            
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Link to="/assessments/demo">
+                <Button 
+                  variant="outline" 
+                  className="group relative gap-3 px-6 py-3 text-base font-semibold rounded-2xl border-2 border-emerald-400/30 hover:border-emerald-400 hover:bg-emerald-400/10 hover:-translate-y-1 transition-all duration-300"
+                >
+                  <Play className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="relative">Try Demo</span>
+                </Button>
+              </Link>
+              
+              <Link to="/jobs">
+                <Button 
+                  className="group relative gap-3 px-6 py-3 text-base font-semibold rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-emerald-400/30 hover:-translate-y-1 transition-all duration-300 bg-gradient-to-r from-emerald-500 to-blue-500 border-none"
+                >
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-blue-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <Plus className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
+                  <span className="relative">Create Job</span>
+                </Button>
+              </Link>
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-            <Link to="/assessments/demo" className="w-full sm:w-auto">
-              <Button variant="outline" className="gap-2 w-full sm:w-auto">
-                <Play className="h-4 w-4" />
-                Try Demo
-              </Button>
-            </Link>
-            <Link to="/jobs" className="w-full sm:w-auto">
-              <Button className="gap-2 w-full sm:w-auto">
-                <Plus className="h-4 w-4" />
-                Create Job
-              </Button>
-            </Link>
-          </div>
+          
+          {/* Decorative elements */}
+          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent rounded-full" />
+          <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full" />
         </div>
 
-        {/* Summary Cards */}
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-6 sm:mb-8">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total Jobs</CardTitle>
+        {/* Enhanced Summary Cards */}
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-12">
+          <Card className="group card-premium hover-lift hover-glow border-none shadow-lg rounded-3xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/50 to-white group-hover:from-blue-50 group-hover:via-blue-100/30 group-hover:to-blue-50/50 transition-all duration-500" />
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-400/20 to-emerald-400/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            <CardHeader className="flex flex-row items-center justify-between pb-3 relative z-10">
+              <div className="flex flex-col gap-1">
+                <CardTitle className="text-sm font-semibold text-slate-600 uppercase tracking-wider">
+                  Total Jobs
+                </CardTitle>
+                <div className="text-3xl sm:text-4xl font-black text-slate-900 group-hover:text-blue-600 transition-colors duration-300">
+                  {allJobs.length}
+                </div>
+              </div>
+              <div className="relative">
+                <div className="h-14 w-14 rounded-2xl flex items-center justify-center shadow-lg bg-blue-100 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  <Briefcase className="h-7 w-7 text-blue-600" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse shadow-lg" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{allJobs.length}</div>
-              <p className="text-xs text-muted-foreground">
-                {activeJobs.length} active, {allJobs.length - activeJobs.length} archived
-              </p>
+            
+            <CardContent className="pt-0 relative z-10">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Badge className="text-xs font-semibold px-3 py-1 rounded-full bg-blue-100 text-blue-700 border-blue-200">
+                    {activeJobs.length} active
+                  </Badge>
+                  <span className="text-xs text-slate-500 font-medium">
+                    {allJobs.length - activeJobs.length} archived
+                  </span>
+                </div>
+              </div>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Assessments Created</CardTitle>
+          <Card className="group card-premium hover-lift hover-glow border-none shadow-lg rounded-3xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-white via-emerald-50/50 to-white group-hover:from-emerald-50 group-hover:via-emerald-100/30 group-hover:to-emerald-50/50 transition-all duration-500" />
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-emerald-400/20 to-blue-400/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            <CardHeader className="flex flex-row items-center justify-between pb-3 relative z-10">
+              <div className="flex flex-col gap-1">
+                <CardTitle className="text-sm font-semibold text-slate-600 uppercase tracking-wider">
+                  Assessments
+                </CardTitle>
+                <div className="text-3xl sm:text-4xl font-black text-slate-900 group-hover:text-emerald-600 transition-colors duration-300">
+                  {assessments.length}
+                </div>
+              </div>
+              <div className="relative">
+                <div className="h-14 w-14 rounded-2xl flex items-center justify-center shadow-lg bg-emerald-100 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  <ClipboardCheck className="h-7 w-7 text-emerald-600" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse shadow-lg" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{assessments.length}</div>
-              <p className="text-xs text-muted-foreground">
-                {assessments.length > 0 ? 'Ready for candidates' : 'No assessments yet'}
-              </p>
+            
+            <CardContent className="pt-0 relative z-10">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Badge className="text-xs font-semibold px-3 py-1 rounded-full bg-emerald-100 text-emerald-700 border-emerald-200">
+                    {assessments.length > 0 ? 'Ready' : 'None yet'}
+                  </Badge>
+                  <span className="text-xs text-slate-500 font-medium">
+                    for candidates
+                  </span>
+                </div>
+              </div>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Active Jobs</CardTitle>
+          <Card className="group card-premium hover-lift hover-glow border-none shadow-lg rounded-3xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-white via-purple-50/50 to-white group-hover:from-purple-50 group-hover:via-purple-100/30 group-hover:to-purple-50/50 transition-all duration-500" />
+            <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-purple-400/20 to-emerald-400/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            <CardHeader className="flex flex-row items-center justify-between pb-3 relative z-10">
+              <div className="flex flex-col gap-1">
+                <CardTitle className="text-sm font-semibold text-slate-600 uppercase tracking-wider">
+                  Active Jobs
+                </CardTitle>
+                <div className="text-3xl sm:text-4xl font-black text-slate-900 group-hover:text-purple-600 transition-colors duration-300">
+                  {activeJobs.length}
+                </div>
+              </div>
+              <div className="relative">
+                <div className="h-14 w-14 rounded-2xl flex items-center justify-center shadow-lg bg-purple-100 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  <Target className="h-7 w-7 text-purple-600" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse shadow-lg" />
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{activeJobs.length}</div>
-              <p className="text-xs text-muted-foreground">
-                {activeJobs.length > 0 ? 'Can create assessments' : 'Create jobs first'}
-              </p>
+            
+            <CardContent className="pt-0 relative z-10">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Badge className="text-xs font-semibold px-3 py-1 rounded-full bg-purple-100 text-purple-700 border-purple-200">
+                    {activeJobs.length > 0 ? 'Ready to assess' : 'Create jobs first'}
+                  </Badge>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>

@@ -199,62 +199,94 @@ export default function Index() {
 
   return (
     <Layout>
-      <PageContainer className="min-h-screen bg-sky-100">
-
-        {/* Header Section */}
-        <div className="relative mb-12 text-center">
-          <div className="absolute inset-0 bg-gradient-radial from-primary/5 to-transparent dark:from-primary/10 pointer-events-none" />
-<h1 className="relative text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-3 sm:mb-4 bg-gradient-to-r from-sky-300 via-sky-400 to-sky-500 bg-clip-text text-transparent animate-fade-in">
-  Dashboard
-</h1>
-
-
-
-          <p className="relative text-muted-foreground text-lg sm:text-xl max-w-2xl mx-auto animate-fade-in-up">
-            Your all-in-one hiring intelligence hub
+      <PageContainer className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 container-responsive">
+        {/* Enhanced Header Section */}
+        <div className="relative mb-16 text-center">
+          {/* Background elements */}
+          <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-accent/5 to-transparent pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-primary/20 to-accent/20 rounded-full blur-3xl opacity-30" />
+          
+          {/* Main heading with enhanced animation */}
+          <div className="relative">
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black mb-4 sm:mb-6 gradient-text-rainbow tracking-tight">
+              Dashboard
+            </h1>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-primary/20 mb-6">
+              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              <span className="text-sm font-medium text-slate-600">Live Analytics</span>
+            </div>
+          </div>
+          
+          <p className="relative text-slate-600 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed mb-8">
+            Transform your hiring process with intelligent insights and streamlined workflows
           </p>
-          <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-primary/50 via-accent/50 to-secondary/50 rounded-full blur-sm" />
+          
+          {/* Decorative elements */}
+          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full" />
+          <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent rounded-full" />
         </div>
 
-        {/* Stats Section */}
-        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-8 sm:mb-10">
+        {/* Enhanced Stats Section */}
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-12">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
               <Card
                 key={stat.title}
-                className="group relative overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="group relative overflow-hidden card-premium hover-lift hover-glow border-none shadow-lg rounded-3xl"
+                style={{ 
+                  animationDelay: `${index * 150}ms`,
+                  animation: 'fadeInUp 0.6s ease-out forwards'
+                }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <CardHeader className="flex flex-row items-center justify-between pb-2 relative">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    {stat.title}
-                  </CardTitle>
-                  <div
-                    className={cn(
-                      'h-10 w-10 rounded-full flex items-center justify-center',
-                      stat.bgColor,
-                      'group-hover:scale-110 transition-transform'
-                    )}
-                  >
-                    <Icon className={cn('h-5 w-5', stat.color)} />
+                {/* Enhanced background gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50/80 to-white group-hover:from-primary/5 group-hover:via-accent/5 group-hover:to-secondary/5 transition-all duration-500" />
+                
+                {/* Floating orb effect */}
+                <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-primary/20 to-accent/30 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                <CardHeader className="flex flex-row items-center justify-between pb-3 relative z-10">
+                  <div className="flex flex-col gap-1">
+                    <CardTitle className="text-sm font-semibold text-slate-600 uppercase tracking-wider">
+                      {stat.title}
+                    </CardTitle>
+                    <div className="text-3xl sm:text-4xl font-black text-slate-900 group-hover:text-primary transition-colors duration-300">
+                      {stat.value}
+                    </div>
+                  </div>
+                  <div className="relative">
+                    <div
+                      className={cn(
+                        'h-14 w-14 rounded-2xl flex items-center justify-center shadow-lg',
+                        stat.bgColor,
+                        'group-hover:scale-110 group-hover:rotate-3 transition-all duration-300'
+                      )}
+                    >
+                      <Icon className={cn('h-7 w-7', stat.color)} />
+                    </div>
+                    {/* Pulsing indicator */}
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse shadow-lg" />
                   </div>
                 </CardHeader>
-                <CardContent>
-                  <div className="text-2xl sm:text-3xl font-bold mb-2">{stat.value}</div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Badge
-                      variant={
-                        stat.changeType === 'positive' ? 'default' : 'destructive'
-                      }
-                      className="text-xs"
-                    >
-                      {stat.change}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">
-                      vs last month
-                    </span>
+                
+                <CardContent className="pt-0 relative z-10">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Badge
+                        variant={stat.changeType === 'positive' ? 'default' : 'destructive'}
+                        className={cn(
+                          'text-xs font-semibold px-3 py-1 rounded-full shadow-sm',
+                          stat.changeType === 'positive' 
+                            ? 'bg-green-100 text-green-700 border-green-200' 
+                            : 'bg-red-100 text-red-700 border-red-200'
+                        )}
+                      >
+                        {stat.change}
+                      </Badge>
+                      <span className="text-xs text-slate-500 font-medium">
+                        vs last month
+                      </span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -262,42 +294,72 @@ export default function Index() {
           })}
         </div>
 
-        {/* Quick Actions & Performance */}
-        <div className="grid gap-6 sm:gap-8 lg:grid-cols-3 mb-8 sm:mb-10">
-          {/* Quick Actions */}
+        {/* Enhanced Quick Actions & Performance */}
+        <div className="grid gap-8 lg:grid-cols-3 mb-12">
+          {/* Enhanced Quick Actions */}
           <div className="lg:col-span-2">
-            <Card className="shadow-lg border-none overflow-hidden relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/10 pointer-events-none" />
-              <CardHeader className="relative">
-                <CardTitle className="text-2xl font-semibold">
-                  Quick Actions
-                </CardTitle>
-                <CardDescription>
-                  Manage and track your hiring workflow
-                </CardDescription>
+            <Card className="card-premium shadow-2xl border-none overflow-hidden relative rounded-3xl">
+              {/* Animated background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50/50 to-primary/5" />
+              <div className="absolute inset-0 bg-grid-animated opacity-10" />
+              
+              <CardHeader className="relative pb-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg">
+                    <Target className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-2xl font-bold text-slate-800">
+                      Quick Actions
+                    </CardTitle>
+                    <CardDescription className="text-slate-600">
+                      Streamline your hiring workflow with one-click actions
+                    </CardDescription>
+                  </div>
+                </div>
               </CardHeader>
-              <CardContent className="grid gap-4 grid-cols-1 sm:grid-cols-2 relative">
-                {quickActions.map((action) => (
+              
+              <CardContent className="grid gap-6 grid-cols-1 sm:grid-cols-2 relative pb-8">
+                {quickActions.map((action, index) => (
                   <Link
                     key={action.title}
                     to={action.link}
-                    className="group flex items-center gap-4 rounded-xl p-5 transition-all hover:shadow-md hover:-translate-y-1 hover:bg-primary/5"
+                    className="group relative flex items-center gap-5 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 bg-white/80 backdrop-blur-sm border border-white/50 hover:border-primary/30"
+                    style={{ animationDelay: `${index * 100 + 300}ms` }}
                   >
-                    <div
-                      className={cn(
-                        'flex h-14 w-14 items-center justify-center rounded-xl',
-                        action.bg
-                      )}
-                    >
-                      <action.icon
-                        className={cn('h-7 w-7', action.color)}
-                      />
+                    {/* Hover gradient overlay */}
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    
+                    <div className="relative">
+                      <div
+                        className={cn(
+                          'flex h-16 w-16 items-center justify-center rounded-2xl shadow-lg transition-all duration-300',
+                          action.bg,
+                          'group-hover:scale-110 group-hover:rotate-6'
+                        )}
+                      >
+                        <action.icon className={cn('h-8 w-8', action.color)} />
+                      </div>
+                      {/* Floating dot */}
+                      <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-400 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="w-2 h-2 bg-white rounded-full" />
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-base">{action.title}</p>
-                      <p className="text-sm text-muted-foreground">
+                    
+                    <div className="flex-1 min-w-0 relative">
+                      <p className="font-bold text-lg text-slate-800 group-hover:text-primary transition-colors duration-300 mb-1">
+                        {action.title}
+                      </p>
+                      <p className="text-sm text-slate-600 leading-relaxed">
                         {action.desc}
                       </p>
+                    </div>
+                    
+                    {/* Arrow indicator */}
+                    <div className="text-slate-400 group-hover:text-primary transition-colors duration-300 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                      </svg>
                     </div>
                   </Link>
                 ))}

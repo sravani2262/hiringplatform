@@ -1,26 +1,50 @@
+@import './styles/custom.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import './styles/custom.css';
-
-/* Mobile-specific fixes */
+/* Enhanced Mobile and Layout fixes */
 @layer base {
   html, body {
     height: 100%;
     overflow-x: hidden;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   #root {
     height: 100%;
+    position: relative;
   }
   
-  /* Ensure mobile layout works properly */
+  /* Enhanced mobile layout with better spacing */
   @media (max-width: 1023px) {
     .mobile-layout {
       display: flex;
       flex-direction: column;
       height: 100vh;
+      position: relative;
+    }
+    
+    /* Better mobile padding */
+    .mobile-padding {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    /* Safe area support for notched devices */
+    .mobile-safe-area {
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+  
+  /* Enhanced tablet layouts */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .tablet-grid {
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 }
@@ -160,23 +184,195 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
-  /* Glassmorphism effect */
+  /* Enhanced Glassmorphism effect with better backdrop */
   .glass {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20;
+    @apply bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl;
+  }
+  
+  .glass-strong {
+    @apply bg-white/20 backdrop-blur-2xl border border-white/30 shadow-2xl;
   }
 
-  /* Gradient text */
+  /* Enhanced gradient text with animation */
   .gradient-text {
     @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+    background-size: 200% 100%;
+    animation: gradient-shift 3s ease-in-out infinite;
+  }
+  
+  .gradient-text-rainbow {
+    @apply bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent;
+    background-size: 300% 100%;
+    animation: rainbow-shift 4s ease-in-out infinite;
   }
 
-  /* Hover lift effect */
+  /* Enhanced hover effects with micro-interactions */
   .hover-lift {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:shadow-primary/20;
+  }
+  
+  .hover-lift-sm {
+    @apply transition-all duration-200 hover:-translate-y-1 hover:shadow-lg;
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105 active:scale-95;
+  }
+  
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-2xl hover:shadow-primary/25;
   }
 
-  /* Card glow effect */
+  /* Enhanced card effects */
   .card-glow {
-    @apply relative before:absolute before:inset-0 before:-z-10 before:rounded-lg before:bg-gradient-to-r before:from-primary/20 before:to-accent/20 before:blur-xl before:opacity-0 hover:before:opacity-100 before:transition-opacity;
+    @apply relative overflow-hidden;
+  }
+  
+  .card-glow::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: linear-gradient(135deg, hsl(262 83% 58% / 0.1), hsl(177 70% 50% / 0.1));
+    blur: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .card-glow:hover::before {
+    opacity: 1;
+  }
+  
+  /* Premium card with enhanced visuals */
+  .card-premium {
+    @apply bg-gradient-to-br from-white via-white to-slate-50/50 border-2 border-transparent;
+    background-clip: padding-box;
+    position: relative;
+  }
+  
+  .card-premium::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    margin: -2px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, hsl(262 83% 58% / 0.3), hsl(177 70% 50% / 0.3));
+  }
+  
+  /* Animated backgrounds */
+  .bg-grid-animated {
+    background-image: 
+      linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    animation: grid-move 20s linear infinite;
+  }
+  
+  /* Loading shimmer */
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  
+  /* Status badges with enhanced colors */
+  .status-applied {
+    @apply bg-blue-100 text-blue-700 border-blue-200;
+  }
+  .status-screen {
+    @apply bg-purple-100 text-purple-700 border-purple-200;
+  }
+  .status-tech {
+    @apply bg-cyan-100 text-cyan-700 border-cyan-200;
+  }
+  .status-offer {
+    @apply bg-green-100 text-green-700 border-green-200;
+  }
+  .status-hired {
+    @apply bg-emerald-100 text-emerald-700 border-emerald-200;
+  }
+  .status-rejected {
+    @apply bg-red-100 text-red-700 border-red-200;
+  }
+  
+  /* Responsive utilities */
+  .container-responsive {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Enhanced focus styles */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2;
+  }
+}
+
+/* Animation keyframes */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes rainbow-shift {
+  0%, 100% { background-position: 0% 50%; }
+  33% { background-position: 50% 50%; }
+  66% { background-position: 100% 50%; }
+}
+
+@keyframes grid-move {
+  0% { background-position: 0 0; }
+  100% { background-position: 20px 20px; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Enhanced scroll bars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.3);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.5);
+}
+
+/* Kanban Board alignment fixes */
+.kanban-board {
+  display: grid;
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .kanban-board {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .kanban-board {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .kanban-board {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1.5rem;
   }
 }
