@@ -1,5 +1,6 @@
 import { Layout } from '@/components/Layout';
 import { PageContainer } from '@/components/PageContainer';
+import { HeroSection } from '@/components/hero/HeroSection';
 import {
   Card,
   CardContent,
@@ -14,14 +15,25 @@ import {
   TrendingUp,
   Target,
   Award,
+  Sparkles,
+  Zap,
+  Brain
 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 export default function Index() {
+  const location = useLocation();
+  const isDashboard = location.pathname === '/dashboard' || location.pathname === '/';
+  
+  // If on root path, show hero section
+  if (location.pathname === '/') {
+    return <HeroSection />;
+  }
+  
   const { data: jobs, isLoading: jobsLoading, error: jobsError } = useQuery({
     queryKey: ['jobs'],
     queryFn: async () => {
@@ -201,29 +213,43 @@ export default function Index() {
     <Layout>
       <PageContainer className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 container-responsive">
         {/* Enhanced Header Section */}
-        <div className="relative mb-16 text-center">
-          {/* Background elements */}
-          <div className="absolute inset-0 bg-gradient-radial from-primary/10 via-accent/5 to-transparent pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-primary/20 to-accent/20 rounded-full blur-3xl opacity-30" />
+        <div className="relative mb-16 text-center animate-fade-in-down">
+          {/* Enhanced background elements */}
+          <div className="absolute inset-0 bg-mesh opacity-20 pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-primary/20 to-accent/20 rounded-full blur-3xl opacity-30 animate-pulse" />
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-accent/30 to-transparent rounded-full blur-2xl animate-float" />
+          <div className="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr from-primary/30 to-transparent rounded-full blur-2xl animate-bounce-gentle" />
           
           {/* Main heading with enhanced animation */}
-          <div className="relative">
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black mb-4 sm:mb-6 gradient-text-rainbow tracking-tight">
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-primary/10 to-accent/10 backdrop-blur-sm border border-primary/20 mb-8 animate-scale-in">
+              <Brain className="w-5 h-5 text-primary animate-pulse" />
+              <span className="text-sm font-semibold text-primary">AI-Powered Dashboard</span>
+              <Sparkles className="w-4 h-4 text-accent animate-bounce" />
+            </div>
+            
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black mb-6 text-gradient-rainbow tracking-tight animate-fade-in-up">
               Dashboard
             </h1>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-primary/20 mb-6">
-              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-sm font-medium text-slate-600">Live Analytics</span>
+            
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-sm border border-green-200 shadow-lg mb-6 animate-scale-in">
+              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-lg" />
+              <span className="text-sm font-medium text-slate-700">Live Analytics</span>
+              <div className="flex items-center gap-1">
+                <div className="w-1 h-1 rounded-full bg-green-300 animate-ping" />
+                <div className="w-1 h-1 rounded-full bg-green-300 animate-ping" style={{animationDelay: '0.5s'}} />
+                <div className="w-1 h-1 rounded-full bg-green-300 animate-ping" style={{animationDelay: '1s'}} />
+              </div>
             </div>
           </div>
           
-          <p className="relative text-slate-600 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed mb-8">
+          <p className="relative z-10 text-slate-600 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed mb-8 animate-fade-in-up" style={{animationDelay: '0.3s'}}>
             Transform your hiring process with intelligent insights and streamlined workflows
           </p>
           
-          {/* Decorative elements */}
-          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full" />
-          <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent rounded-full" />
+          {/* Enhanced decorative elements */}
+          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full animate-pulse" />
+          <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-transparent via-accent to-transparent rounded-full animate-pulse" style={{animationDelay: '0.5s'}} />
         </div>
 
         {/* Enhanced Stats Section */}
@@ -233,60 +259,76 @@ export default function Index() {
             return (
               <Card
                 key={stat.title}
-                className="group relative overflow-hidden card-premium hover-lift hover-glow border-none shadow-lg rounded-3xl"
+                className="group relative overflow-hidden card-premium hover-lift hover-glow border-none shadow-elegant rounded-3xl animate-fade-in-up"
                 style={{ 
-                  animationDelay: `${index * 150}ms`,
-                  animation: 'fadeInUp 0.6s ease-out forwards'
+                  animationDelay: `${index * 150}ms`
                 }}
               >
-                {/* Enhanced background gradient */}
+                {/* Enhanced background with mesh pattern */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50/80 to-white group-hover:from-primary/5 group-hover:via-accent/5 group-hover:to-secondary/5 transition-all duration-500" />
+                <div className="absolute inset-0 bg-dots opacity-10 group-hover:opacity-20 transition-opacity duration-500" />
                 
-                {/* Floating orb effect */}
-                <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-primary/20 to-accent/30 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                {/* Enhanced floating orb effect */}
+                <div className="absolute -top-6 -right-6 w-28 h-28 bg-gradient-to-br from-primary/20 to-accent/30 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500 animate-pulse" />
+                <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-gradient-to-tr from-accent/10 to-primary/20 rounded-full blur-lg opacity-50 group-hover:opacity-80 transition-opacity duration-500" />
                 
                 <CardHeader className="flex flex-row items-center justify-between pb-3 relative z-10">
-                  <div className="flex flex-col gap-1">
-                    <CardTitle className="text-sm font-semibold text-slate-600 uppercase tracking-wider">
+                  <div className="flex flex-col gap-2">
+                    <CardTitle className="text-sm font-bold text-slate-600 uppercase tracking-wider group-hover:text-primary transition-colors">
                       {stat.title}
                     </CardTitle>
-                    <div className="text-3xl sm:text-4xl font-black text-slate-900 group-hover:text-primary transition-colors duration-300">
+                    <div className="text-3xl sm:text-4xl font-black text-slate-900 group-hover:text-primary transition-all duration-300 group-hover:scale-105">
                       {stat.value}
                     </div>
                   </div>
                   <div className="relative">
                     <div
                       className={cn(
-                        'h-14 w-14 rounded-2xl flex items-center justify-center shadow-lg',
+                        'h-16 w-16 rounded-2xl flex items-center justify-center shadow-dreamy backdrop-blur-sm',
                         stat.bgColor,
-                        'group-hover:scale-110 group-hover:rotate-3 transition-all duration-300'
+                        'group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 group-hover:shadow-2xl'
                       )}
                     >
-                      <Icon className={cn('h-7 w-7', stat.color)} />
+                      <Icon className={cn('h-8 w-8 transition-all duration-300', stat.color, 'group-hover:scale-110')} />
                     </div>
-                    {/* Pulsing indicator */}
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse shadow-lg" />
+                    {/* Enhanced pulsing indicator */}
+                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full animate-pulse shadow-lg border-2 border-white" />
+                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-400 rounded-full animate-ping opacity-75" />
                   </div>
                 </CardHeader>
                 
                 <CardContent className="pt-0 relative z-10">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       <Badge
-                        variant={stat.changeType === 'positive' ? 'default' : 'destructive'}
                         className={cn(
-                          'text-xs font-semibold px-3 py-1 rounded-full shadow-sm',
+                          'text-xs font-bold px-3 py-1.5 rounded-full shadow-soft border-0 backdrop-blur-sm transition-all duration-300',
                           stat.changeType === 'positive' 
-                            ? 'bg-green-100 text-green-700 border-green-200' 
-                            : 'bg-red-100 text-red-700 border-red-200'
+                            ? 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 group-hover:from-green-200 group-hover:to-emerald-200' 
+                            : 'bg-gradient-to-r from-red-100 to-rose-100 text-red-700 group-hover:from-red-200 group-hover:to-rose-200'
                         )}
                       >
+                        <TrendingUp className={cn('w-3 h-3 mr-1', stat.changeType === 'positive' ? 'text-green-600' : 'text-red-600')} />
                         {stat.change}
                       </Badge>
                       <span className="text-xs text-slate-500 font-medium">
                         vs last month
                       </span>
                     </div>
+                  </div>
+                  
+                  {/* Progress indicator */}
+                  <div className="mt-3 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div 
+                      className={cn(
+                        'h-full rounded-full transition-all duration-1000 ease-out',
+                        stat.changeType === 'positive' ? 'bg-gradient-to-r from-green-400 to-emerald-500' : 'bg-gradient-to-r from-red-400 to-rose-500'
+                      )}
+                      style={{ 
+                        width: `${Math.abs(parseInt(stat.change))}%`,
+                        animationDelay: `${index * 200 + 500}ms`
+                      }}
+                    />
                   </div>
                 </CardContent>
               </Card>
