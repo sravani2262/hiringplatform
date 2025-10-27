@@ -1,0 +1,32 @@
+@keyframes glow {
+  0% { box-shadow: 0 0 5px theme('colors.primary.500/20'); }
+  50% { box-shadow: 0 0 20px theme('colors.primary.500/40'); }
+  100% { box-shadow: 0 0 5px theme('colors.primary.500/20'); }
+}
+
+.shadow-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Enhanced gradient backgrounds */
+.bg-gradient-blur {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Smooth transitions */
+.transition-smooth {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Logo hover effect */
+.logo-hover:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+/* Navigation item hover effect */
+.nav-item-hover:hover {
+  background-size: 200% 100%;
+  background-position: right center;
+}

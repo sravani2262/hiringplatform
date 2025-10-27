@@ -26,6 +26,9 @@ A comprehensive React-based hiring platform for managing jobs, candidates, and a
 - Kanban board with drag-and-drop stage transitions
 - Candidate profile pages with timeline of status changes (`/candidates/:id`)
 - Stage transition tracking with user attribution
+- **BONUS: Candidate notes with @mention support**
+- **BONUS: Bulk operations (select multiple candidates, bulk stage changes)**
+- **BONUS: Export to CSV functionality**
 
 ### ✅ Assessments
 
@@ -84,8 +87,9 @@ src/
 │   │   ├── JobsList.tsx        # Jobs list with drag-and-drop
 │   │   └── JobModal.tsx        # Create/edit job modal
 │   ├── candidates/
-│   │   ├── CandidatesList.tsx  # Virtualized candidates list
-│   │   └── KanbanBoard.tsx     # Drag-and-drop kanban board
+│   │   ├── CandidatesList.tsx  # Virtualized candidates list with bulk operations
+│   │   ├── KanbanBoard.tsx     # Drag-and-drop kanban board
+│   │   └── CandidateNotes.tsx # Notes with @mentions
 │   ├── assessments/
 │   │   └── AssessmentBuilder.tsx # Assessment builder interface
 │   └── ui/                     # shadcn UI components
@@ -95,7 +99,8 @@ src/
 │   ├── JobDetail.tsx           # Individual job page
 │   ├── Candidates.tsx          # Candidates page (list/kanban)
 │   ├── CandidateDetail.tsx     # Candidate profile with timeline
-│   └── Assessments.tsx         # Assessments management
+│   ├── Assessments.tsx         # Assessments management
+│   └── Analytics.tsx           # Analytics dashboard with charts
 ├── lib/
 │   ├── db.ts                   # Dexie database schema
 │   └── utils.ts                # Utility functions
@@ -210,17 +215,56 @@ Provides excellent caching, optimistic updates, error handling, and reduces boil
 
 1. Assessment builder is a foundation - full question builder UI needs implementation
 2. File upload in assessments is a stub
-3. Candidate notes with @mentions render but don't have suggestion dropdown
-4. No actual authentication system
+3. No actual authentication system
+4. Notes stored in localStorage (should be in IndexedDB for production)
 
-### Planned Features
+### 🎉 Bonus Features Implemented
+
+1. ✅ **Analytics Dashboard** - Comprehensive analytics page with charts showing:
+
+   - Conversion rates and hiring metrics
+   - Stage distribution (pie chart)
+   - Conversion funnel visualization
+   - Top jobs by applicants
+   - Detailed stage breakdown with progress bars
+   - Average time to hire metrics
+
+2. ✅ **Candidate Notes with @Mentions** - Feature-rich notes system:
+
+   - Add notes to candidate profiles
+   - @mention team members with autocomplete dropdown
+   - Visual mention badges
+   - Notes persist in localStorage
+   - Real-time @ suggestion while typing
+
+3. ✅ **Bulk Operations for Candidates**:
+
+   - Select multiple candidates via checkboxes
+   - Bulk change candidate stages
+   - Export selected candidates to CSV
+   - Export all candidates to CSV
+   - Visual selection indicators
+
+4. ✅ **Enhanced Filtering**:
+
+   - Jobs: Search by title, location, tags + status filter
+   - Candidates: Search by name/email + stage filter
+   - Debounced search for performance
+   - Clear search button
+
+5. ✅ **Export Functionality**:
+   - Export candidates to CSV with name, email, phone, stage, applied date
+   - Support for exporting all candidates or selected candidates
+   - Automatic filename with timestamp
+
+### Future Enhancements
 
 1. Full assessment builder with drag-and-drop questions
 2. Rich text editor for job descriptions
 3. Email integration for candidate communication
-4. Analytics dashboard with charts
-5. Export candidates/reports to CSV
-6. Advanced filtering (multiple criteria, saved filters)
+4. Advanced authentication system
+5. Real-time collaboration features
+6. Mobile app companion
 
 ## 🧪 Testing Considerations
 

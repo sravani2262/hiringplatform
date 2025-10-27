@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Mail, Phone, Briefcase } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { CandidateNotes } from '@/components/candidates/CandidateNotes';
 
 export default function CandidateDetail() {
   const { id } = useParams();
@@ -149,6 +150,9 @@ export default function CandidateDetail() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Notes with @mentions */}
+            <CandidateNotes candidateId={id!} />
           </div>
 
           {/* Right column - Actions */}

@@ -12,6 +12,7 @@ import Candidates from "./pages/Candidates";
 import CandidateDetail from "./pages/CandidateDetail";
 import Assessments from "./pages/Assessments";
 import AssessmentDemo from "./pages/AssessmentDemo";
+import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient({
@@ -43,6 +44,7 @@ const App = () => (
             <Route path="/candidates/:id" element={<CandidateDetail />} />
             <Route path="/assessments" element={<Assessments />} />
             <Route path="/assessments/demo" element={<AssessmentDemo />} />
+            <Route path="/analytics" element={<Analytics />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

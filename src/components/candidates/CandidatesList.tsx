@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,9 +11,19 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Search, Mail } from "lucide-react";
-import { Candidate } from "@/lib/db";
+import { Button } from "@/components/ui/button";
+import { Search, Mail, Download, ChevronDown } from "lucide-react";
+import { Candidate, CandidateStage } from "@/lib/db";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const STAGES = [
   { value: "all", label: "All Stages" },
@@ -38,7 +48,9 @@ export function CandidatesList() {
   const [search, setSearch] = useState("");
   const [stage, setStage] = useState("all");
   const [page, setPage] = useState(1);
+  const [selectedCandidates, setSelectedCandidates] = useState<string[]>([]);
   const pageSize = 50;
+  const queryClient = useQueryClient();
 
   interface CandidatesResponse {
     data: Candidate[];
@@ -89,6 +101,76 @@ export function CandidatesList() {
     return filtered;
   }, [data, search, stage]);
 
+  // Export functions
+  const exportToCSV = (candidatesToExport: Candidate[]) => {
+    const headers = ['Name', 'Email', 'Phone', 'Stage', 'Applied Date'];
+    const rows = candidatesToExport.map((c) => [
+      c.name,
+      c.email,
+      c.phone || '',
+      c.stage,
+      new Date(c.createdAt).toLocaleDateString(),
+    ]);
+    
+    const csv = [headers, ...rows].map((row) => row.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `candidates-${new Date().toISOString()}.csv`;
+    a.click();
+    toast.success('Candidates exported successfully');
+  };
+
+  const handleExportAll = () => {
+    exportToCSV(filteredCandidates);
+  };
+
+  const handleExportSelected = () => {
+    const selected = filteredCandidates.filter((c) =>
+      selectedCandidates.includes(c.id)
+    );
+    exportToCSV(selected);
+    setSelectedCandidates([]);
+  };
+
+  // Bulk stage change
+  const bulkStageChangeMutation = useMutation({
+    mutationFn: async ({ ids, newStage }: { ids: string[]; newStage: CandidateStage }) => {
+      const promises = ids.map((id) =>
+        fetch(`/api/candidates/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stage: newStage }),
+        })
+      );
+      await Promise.all(promises);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['candidates'] });
+      setSelectedCandidates([]);
+      toast.success(`${selectedCandidates.length} candidates updated successfully`);
+    },
+    onError: () => {
+      toast.error('Failed to update candidates');
+    },
+  });
+
+  const handleBulkStageChange = (newStage: CandidateStage) => {
+    bulkStageChangeMutation.mutate({
+      ids: selectedCandidates,
+      newStage,
+    });
+  };
+
+  const toggleCandidateSelection = (candidateId: string) => {
+    setSelectedCandidates((prev) =>
+      prev.includes(candidateId)
+        ? prev.filter((id) => id !== candidateId)
+        : [...prev, candidateId]
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -117,7 +199,7 @@ export function CandidatesList() {
       {/* Filters */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex gap-4 flex-wrap">
+          <div className="flex gap-4 flex-wrap items-center">
             <div className="flex-1 min-w-[200px]">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -141,6 +223,51 @@ export function CandidatesList() {
                 ))}
               </SelectContent>
             </Select>
+
+            {/* Bulk Actions */}
+            {selectedCandidates.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="gap-2">
+                    <ChevronDown className="h-4 w-4" />
+                    Bulk Actions ({selectedCandidates.length})
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuLabel>Change Stage</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {[
+                    { value: 'screen', label: 'Move to Screening' },
+                    { value: 'tech', label: 'Move to Technical' },
+                    { value: 'offer', label: 'Move to Offer' },
+                    { value: 'hired', label: 'Mark as Hired' },
+                    { value: 'rejected', label: 'Mark as Rejected' },
+                  ].map((stageOption) => (
+                    <DropdownMenuItem
+                      key={stageOption.value}
+                      onClick={() => handleBulkStageChange(stageOption.value as CandidateStage)}
+                    >
+                      {stageOption.label}
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleExportSelected}>
+                    <Download className="mr-2 h-4 w-4" />
+                    Export Selected
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setSelectedCandidates([])}>
+                    Clear Selection
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            {/* Export All */}
+            <Button variant="outline" onClick={handleExportAll} className="gap-2">
+              <Download className="h-4 w-4" />
+              Export All
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -154,44 +281,56 @@ export function CandidatesList() {
       {/* Candidates List - Optimized with virtual scrolling behavior */}
       <div className="space-y-5 max-h-[600px] overflow-y-auto border rounded-lg p-4">
         {filteredCandidates.map((candidate: Candidate) => (
-          <Link key={candidate.id} to={`/candidates/${candidate.id}`}>
-           <Card className="mb-5 hover:shadow-lg shadow-sm transition-all duration-200 cursor-pointer group hover:scale-[1.02] bg-card">
+          <Card 
+            key={candidate.id} 
+            className="mb-5 hover:shadow-lg shadow-sm transition-all duration-200 group hover:scale-[1.02] bg-card"
+          >
+            <CardContent className="flex items-center gap-4 p-4">
+              {/* Checkbox for bulk selection */}
+              <input
+                type="checkbox"
+                checked={selectedCandidates.includes(candidate.id)}
+                onChange={() => toggleCandidateSelection(candidate.id)}
+                onClick={(e) => e.stopPropagation()}
+                className="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer"
+              />
 
-              <CardContent className="flex items-center justify-between p-4">
-                <div className="flex items-center gap-4 flex-1">
-                  <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <span className="text-sm font-semibold text-primary">
-                      {candidate.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
-                      {candidate.name}
-                    </h3>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                      <Mail className="h-4 w-4" />
-                      {candidate.email}
-                    </div>
+              <Link 
+                to={`/candidates/${candidate.id}`}
+                className="flex items-center gap-4 flex-1 cursor-pointer"
+              >
+                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <span className="text-sm font-semibold text-primary">
+                    {candidate.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()}
+                  </span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-lg group-hover:text-primary transition-colors">
+                    {candidate.name}
+                  </h3>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                    <Mail className="h-4 w-4" />
+                    {candidate.email}
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Badge
-                    className={stageColors[candidate.stage]}
-                    variant="default"
-                  >
-                    {candidate.stage}
-                  </Badge>
-                  <div className="text-xs text-muted-foreground">
-                    {new Date(candidate.createdAt).toLocaleDateString()}
-                  </div>
+              </Link>
+              <div className="flex items-center gap-3">
+                <Badge
+                  className={stageColors[candidate.stage]}
+                  variant="default"
+                >
+                  {candidate.stage}
+                </Badge>
+                <div className="text-xs text-muted-foreground">
+                  {new Date(candidate.createdAt).toLocaleDateString()}
                 </div>
-              </CardContent>
-            </Card>
-          </Link>
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
 

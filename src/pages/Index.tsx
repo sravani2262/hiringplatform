@@ -1,4 +1,5 @@
 import { Layout } from '@/components/Layout';
+import { PageContainer } from '@/components/PageContainer';
 import {
   Card,
   CardContent,
@@ -169,7 +170,7 @@ export default function Index() {
   if (jobsLoading || candidatesLoading) {
     return (
       <Layout>
-        <div className="p-8 bg-gradient-to-b from-background to-muted/20 min-h-screen animate-fade-in">
+        <PageContainer className="min-h-screen animate-fade-in">
           <div className="mb-8 text-center">
             <h1 className="text-5xl font-extrabold mb-3 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
               Dashboard
@@ -191,22 +192,28 @@ export default function Index() {
               </Card>
             ))}
           </div>
-        </div>
+        </PageContainer>
       </Layout>
     );
   }
 
   return (
     <Layout>
-      <div className="p-4 sm:p-6 lg:p-8 bg-gradient-to-b from-background to-muted/20 min-h-screen animate-fade-in">
-        {/* Header */}
-        <div className="mb-6 sm:mb-8 text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-2 sm:mb-3 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
-            Dashboard
-          </h1>
-          <p className="text-muted-foreground text-base sm:text-lg px-4">
+      <PageContainer className="min-h-screen bg-sky-100">
+
+        {/* Header Section */}
+        <div className="relative mb-12 text-center">
+          <div className="absolute inset-0 bg-gradient-radial from-primary/5 to-transparent dark:from-primary/10 pointer-events-none" />
+<h1 className="relative text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-3 sm:mb-4 bg-gradient-to-r from-sky-300 via-sky-400 to-sky-500 bg-clip-text text-transparent animate-fade-in">
+  Dashboard
+</h1>
+
+
+
+          <p className="relative text-muted-foreground text-lg sm:text-xl max-w-2xl mx-auto animate-fade-in-up">
             Your all-in-one hiring intelligence hub
           </p>
+          <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-primary/50 via-accent/50 to-secondary/50 rounded-full blur-sm" />
         </div>
 
         {/* Stats Section */}
@@ -403,7 +410,7 @@ export default function Index() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </PageContainer>
     </Layout>
   );
 }
@@ -438,7 +445,7 @@ const quickActions = [
     desc: 'View hiring insights',
     icon: Award,
     link: '/analytics',
-    bg: 'bg-success/10',
-    color: 'text-success',
+    bg: 'bg-primary/10',
+    color: 'text-primary',
   },
 ];
