@@ -6,7 +6,7 @@ A comprehensive React-based hiring platform for managing jobs, candidates, and a
 
 **Deployed App**: [hiringwave-black.vercel.app]
 
-**GitHub Repository**: [Your repository URL here]
+**GitHub Repository**: [https://github.com/sravani2262/hiringplatform.git]
 
 ## 📋 Features
 
