@@ -31,7 +31,7 @@ export function HeroSection() {
       
       <div className="relative z-10 container mx-auto px-4 py-12">
         {/* Header */}
-        <header className="flex items-center justify-between mb-16 animate-fade-in-down">
+        <header className="flex items-center justify-between mb-8 animate-fade-in-down">
           <BrandLogo size="lg" variant="gradient" animated={true} />
           
           <nav className="hidden md:flex items-center gap-8">
@@ -54,7 +54,7 @@ export function HeroSection() {
         </header>
 
         {/* Hero Content */}
-        <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
+        <div className="grid lg:grid-cols-2 gap-8 items-center mb-20">
           {/* Left Side - Content */}
           <div className="space-y-8 animate-fade-in-up">
             {/* Announcement Badge */}
@@ -176,11 +176,6 @@ export function HeroSection() {
                     ))}
                   </div>
 
-                  {/* Mock Chart */}
-                  <div className="h-24 bg-gradient-to-r from-primary/20 to-accent/20 rounded-xl mb-4 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary/30 via-transparent to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-r from-primary to-accent opacity-60 rounded-xl" />
-                  </div>
 
                   {/* Mock List */}
                   <div className="space-y-2">
@@ -195,14 +190,6 @@ export function HeroSection() {
                 </CardContent>
               </Card>
 
-              {/* Floating Elements */}
-              <div className="absolute -top-6 -right-6 w-20 h-20 bg-gradient-to-br from-accent to-primary rounded-2xl flex items-center justify-center shadow-xl animate-float">
-                <TrendingUp className="w-10 h-10 text-white" />
-              </div>
-              
-              <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg animate-bounce-gentle">
-                <Shield className="w-8 h-8 text-white" />
-              </div>
             </div>
           </div>
         </div>
@@ -244,30 +231,10 @@ export function HeroSection() {
         {/* CTA Section */}
         <div className="text-center space-y-8 animate-fade-in-up">
           <div className="space-y-4">
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900">
-              Ready to Transform Your Hiring?
-            </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Join thousands of companies using TalentFlow to streamline their recruitment process
-            </p>
+           
           </div>
           
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button 
-              asChild 
-              size="lg"
-              className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
-            >
-              <Link to="/dashboard">
-                Start Your Free Trial
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
-            </Button>
-            
-            <p className="text-sm text-slate-500">
-              No credit card required • 14-day free trial
-            </p>
-          </div>
+          
         </div>
       </div>
     </div>

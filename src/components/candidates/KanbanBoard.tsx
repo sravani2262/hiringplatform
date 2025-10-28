@@ -2,13 +2,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Candidate, CandidateStage } from '@/lib/db';
-import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, closestCorners } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, closestCorners, useDroppable } from '@dnd-kit/core';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Mail, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Link } from 'react-router-dom';
 
 const STAGES: { value: CandidateStage; label: string; color: string }[] = [
   { value: 'applied', label: 'Applied', color: 'bg-status-applied' },
@@ -21,6 +22,7 @@ const STAGES: { value: CandidateStage; label: string; color: string }[] = [
 
 function SortableCandidateCard({ candidate }: { candidate: Candidate }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: candidate.id });
+  const [dragStartTime, setDragStartTime] = useState<number | null>(null);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -28,130 +30,123 @@ function SortableCandidateCard({ candidate }: { candidate: Candidate }) {
     opacity: isDragging ? 0.3 : 1,
   };
 
+  const handleMouseDown = () => {
+    setDragStartTime(Date.now());
+  };
+
+  const handleClick = (e: React.MouseEvent) => {
+    // If this was a drag operation (mouse was down for more than 200ms), prevent navigation
+    if (dragStartTime && Date.now() - dragStartTime > 200) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setDragStartTime(null);
+  };
+
   return (
-    <Card
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="cursor-grab active:cursor-grabbing hover-lift-sm transition-all duration-300 mb-3 group border-none shadow-md hover:shadow-xl bg-white/90 backdrop-blur-sm rounded-xl"
-    >
-      {/* Hover gradient overlay */}
-      <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      
-      <CardContent className="p-3 relative">
-        <div className="space-y-3">
-          {/* Header with avatar and name */}
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20 flex items-center justify-center flex-shrink-0 shadow-md group-hover:scale-110 transition-transform duration-300">
-                <span className="text-xs font-bold text-primary">
-                  {candidate.name.split(' ').map(n => n[0]).join('').toUpperCase()}
-                </span>
+    <div className="mb-4">
+      <Card
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+        onMouseDown={handleMouseDown}
+        className="cursor-grab active:cursor-grabbing bg-white border border-gray-200 hover:border-blue-300 hover:bg-blue-50/50 transition-colors rounded-lg shadow-sm hover:shadow-md group"
+      >
+        <Link 
+          to={`/candidates/${candidate.id}`} 
+          onClick={handleClick}
+          className="block"
+        >
+          <CardContent className="p-4">
+            <div className="space-y-3">
+              {/* Header with avatar and name */}
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-lg bg-gray-100 group-hover:bg-blue-100 flex items-center justify-center flex-shrink-0 transition-colors">
+                  <span className="text-sm font-semibold text-gray-700 group-hover:text-blue-700">
+                    {candidate.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  </span>
+                </div>
+                
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-semibold text-sm text-gray-900 group-hover:text-blue-900 truncate transition-colors">
+                    {candidate.name}
+                  </h4>
+                </div>
               </div>
-              {/* Status indicator */}
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border border-white shadow-sm" />
+              
+              {/* Email */}
+              <div className="flex items-center gap-2 text-xs text-gray-600 group-hover:text-blue-600 transition-colors">
+                <Mail className="h-3 w-3 flex-shrink-0" />
+                <span className="truncate">{candidate.email}</span>
+              </div>
+              
+              {/* Date */}
+              <div className="text-xs text-gray-500 group-hover:text-blue-500 transition-colors">
+                Applied: {new Date(candidate.createdAt).toLocaleDateString('en-US', { 
+                  month: 'short', 
+                  day: 'numeric',
+                  year: 'numeric'
+                })}
+              </div>
+              
+              {/* Click indicator */}
+              <div className="text-xs text-gray-400 group-hover:text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                Click to view details • Drag to move
+              </div>
             </div>
-            
-            <div className="flex-1 min-w-0">
-              <h4 className="font-bold text-sm group-hover:text-primary transition-colors duration-300 text-slate-800 truncate">
-                {candidate.name}
-              </h4>
-            </div>
-          </div>
-          
-          {/* Email */}
-          <div className="bg-slate-50 px-3 py-2 rounded-lg">
-            <div className="flex items-center gap-2 text-xs text-slate-600">
-              <Mail className="h-3 w-3 flex-shrink-0" />
-              <span className="truncate">{candidate.email}</span>
-            </div>
-          </div>
-          
-          {/* Footer with date */}
-          <div className="flex items-center justify-between pt-1">
-            <div className="text-xs text-slate-500 font-medium">
-              {new Date(candidate.createdAt).toLocaleDateString('en-US', { 
-                month: 'short', 
-                day: 'numeric' 
-              })}
-            </div>
-            
-            {/* Priority indicator */}
-            <div className="flex items-center gap-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-primary/60" />
-              <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
-              <div className="w-1.5 h-1.5 rounded-full bg-primary/20" />
-            </div>
-          </div>
-        </div>
-        
-        {/* Drag indicator */}
-        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="flex flex-col gap-1">
-            <div className="w-1 h-1 bg-slate-400 rounded-full" />
-            <div className="w-1 h-1 bg-slate-400 rounded-full" />
-            <div className="w-1 h-1 bg-slate-400 rounded-full" />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+          </CardContent>
+        </Link>
+      </Card>
+    </div>
   );
 }
 
 function StageColumn({ stage, candidates }: { stage: typeof STAGES[0]; candidates: Candidate[] }) {
+  const { setNodeRef, isOver } = useDroppable({
+    id: stage.value,
+  });
+
   return (
     <div className="flex flex-col h-full">
-      <Card className="flex flex-col h-[calc(100vh-250px)] min-h-[600px] border-none shadow-xl bg-gradient-to-b from-white via-slate-50/50 to-white hover:shadow-2xl transition-all duration-300 rounded-2xl overflow-hidden">
-        {/* Enhanced Header - Fixed height */}
-        <CardHeader className="pb-4 border-b border-slate-200/50 bg-gradient-to-r from-slate-50 to-white relative flex-shrink-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 opacity-50" />
-          
-          <div className="flex items-center justify-between relative">
-            <div className="flex items-center gap-2 min-w-0">
-              <div className={cn('w-3 h-3 rounded-full shadow-sm flex-shrink-0', stage.color)} />
-              <CardTitle className="text-sm font-bold text-slate-800 truncate">
+      <Card 
+        ref={setNodeRef}
+        className={cn(
+          "flex flex-col h-[calc(100vh-200px)] min-h-[500px] bg-white border border-gray-200 rounded-lg transition-colors",
+          isOver && "border-blue-300 bg-blue-50/30"
+        )}
+      >
+        {/* Header */}
+        <CardHeader className="pb-4 border-b border-gray-200 flex-shrink-0">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className={cn('w-3 h-3 rounded-full', stage.color)} />
+              <CardTitle className="text-sm font-semibold text-gray-900">
                 {stage.label}
               </CardTitle>
             </div>
             
-            {/* Enhanced count badge */}
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <Badge 
-                className={cn(
-                  'px-3 py-1 rounded-full font-bold text-white shadow-lg border-none text-xs',
-                  stage.color
-                )}
-              >
-                {candidates.length}
-              </Badge>
-              
-              {/* Progress indicator */}
-              <div className="w-2 h-8 bg-slate-200 rounded-full overflow-hidden">
-                <div 
-                  className={cn('w-full rounded-full transition-all duration-500', stage.color)}
-                  style={{ height: `${Math.min((candidates.length / 10) * 100, 100)}%` }}
-                />
-              </div>
-            </div>
+            <Badge variant="secondary" className="text-xs">
+              {candidates.length}
+            </Badge>
           </div>
         </CardHeader>
         
-        {/* Enhanced Content Area - Flexible height */}
+        {/* Content Area */}
         <CardContent className="flex-1 p-4 overflow-hidden flex flex-col min-h-0">
           <SortableContext items={candidates.map((c) => c.id)} strategy={verticalListSortingStrategy}>
-            <div className="flex-1 overflow-y-auto space-y-3 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent">
+            <div className="flex-1 overflow-y-auto min-h-[100px]">
               {candidates.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full py-12">
-                  {/* Empty state illustration */}
-                  <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl flex items-center justify-center">
-                    <Users className="w-8 h-8 text-slate-400" />
+                <div className={cn(
+                  "flex flex-col items-center justify-center h-32 text-center transition-colors",
+                  isOver && "text-blue-600"
+                )}>
+                  <Users className="w-8 h-8 text-gray-400 mb-2" />
+                  <div className="text-sm text-gray-500 mb-1">
+                    No candidates
                   </div>
-                  <div className="text-sm font-medium text-slate-500 mb-2">
-                    No candidates yet
-                  </div>
-                  <div className="text-xs text-slate-400 text-center">
-                    Drag candidates here or add new ones
+                  <div className="text-xs text-gray-400">
+                    Drag candidates here
                   </div>
                 </div>
               ) : (
@@ -311,41 +306,31 @@ export function KanbanBoard() {
     const activeCandidate = data?.data?.find((c: Candidate) => c.id === active.id);
     if (!activeCandidate) return;
 
-    // Find which stage the candidate was dropped in
-    const overStage = STAGES.find((stage) =>
-      candidatesByStage[stage.value].some((c) => c.id === over.id)
-    );
+    let targetStage: CandidateStage | null = null;
 
-    // If dropped on a candidate card, use that candidate's stage
-    if (overStage && overStage.value !== activeCandidate.stage) {
+    // Check if dropped on a stage column directly
+    if (STAGES.some(stage => stage.value === over.id)) {
+      targetStage = over.id as CandidateStage;
+    } else {
+      // Check if dropped on a candidate card - find which stage that candidate belongs to
+      const overCandidate = data?.data?.find((c: Candidate) => c.id === over.id);
+      if (overCandidate) {
+        targetStage = overCandidate.stage;
+      }
+    }
+
+    // Update candidate stage if different from current
+    if (targetStage && targetStage !== activeCandidate.stage) {
       updateStageMutation.mutate({
         id: activeCandidate.id,
-        stage: overStage.value,
+        stage: targetStage,
       });
     }
   };
 
   const handleDragOver = (event: any) => {
-    const { active, over } = event;
-    if (!over) return;
-
-    const activeCandidate = data?.data?.find((c: Candidate) => c.id === active.id);
-    if (!activeCandidate) return;
-
-    // Check if dropped over a stage column
-    const overStage = STAGES.find((stage) => over.id === stage.value);
-    if (overStage && overStage.value !== activeCandidate.stage) {
-      // Optimistically update
-      queryClient.setQueryData(['candidates'], (old: any) => {
-        if (!old) return old;
-        return {
-          ...old,
-          data: old.data.map((c: Candidate) =>
-            c.id === activeCandidate.id ? { ...c, stage: overStage.value } : c
-          ),
-        };
-      });
-    }
+    // Remove optimistic updates during drag over to prevent conflicts
+    // Only update on drag end for better UX
   };
 
   if (isLoading) {
@@ -366,29 +351,23 @@ export function KanbanBoard() {
 
   return (
     <div className="w-full">
-      {/* Enhanced Header with stats */}
-      <div className="mb-8 p-6 bg-gradient-to-r from-white via-slate-50 to-white rounded-3xl shadow-xl border border-slate-200/50">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center shadow-lg">
-              <Users className="w-8 h-8 text-primary" />
-            </div>
-            <div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-slate-800 mb-1">Candidate Pipeline</h2>
-              <p className="text-slate-600">Track and manage candidates through your hiring process</p>
-            </div>
+      {/* Header with stats */}
+      <div className="mb-6 p-4 bg-white border border-gray-200 rounded-lg">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 mb-1">Candidate Pipeline</h2>
+            <p className="text-sm text-gray-600">Track and manage candidates through your hiring process</p>
           </div>
           <div className="flex items-center gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-slate-800">{data?.data?.length || 0}</div>
-              <div className="text-sm text-slate-500 font-medium">Total Candidates</div>
+              <div className="text-xl font-semibold text-gray-900">{data?.data?.length || 0}</div>
+              <div className="text-xs text-gray-500">Total</div>
             </div>
-            <div className="w-px h-12 bg-slate-300" />
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-600">
+              <div className="text-xl font-semibold text-green-600">
                 {candidatesByStage['hired']?.length || 0}
               </div>
-              <div className="text-sm text-slate-500 font-medium">Successfully Hired</div>
+              <div className="text-xs text-gray-500">Hired</div>
             </div>
           </div>
         </div>
@@ -400,19 +379,18 @@ export function KanbanBoard() {
         onDragEnd={handleDragEnd} 
         onDragOver={handleDragOver}
       >
-        {/* Fixed alignment container with equal height columns */}
+        {/* Kanban columns container */}
         <div className="w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 items-start">
             {STAGES.map((stage) => (
-              <SortableContext 
-                key={stage.value} 
-                items={[stage.value, ...candidatesByStage[stage.value].map((c) => c.id)]} 
-                strategy={verticalListSortingStrategy}
-              >
-                <div id={stage.value} className="w-full h-full">
+              <div key={stage.value} id={stage.value} className="w-full h-full">
+                <SortableContext 
+                  items={candidatesByStage[stage.value].map((c) => c.id)} 
+                  strategy={verticalListSortingStrategy}
+                >
                   <StageColumn stage={stage} candidates={candidatesByStage[stage.value]} />
-                </div>
-              </SortableContext>
+                </SortableContext>
+              </div>
             ))}
           </div>
         </div>

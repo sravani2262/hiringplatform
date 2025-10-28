@@ -171,59 +171,39 @@ export default function Assessments() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 container-responsive">
-        {/* Enhanced Header Section */}
-        <div className="relative mb-16 text-center pt-8">
-          {/* Background elements */}
-          <div className="absolute inset-0 bg-gradient-radial from-emerald-400/8 via-blue-400/4 to-transparent pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-emerald-400/15 to-blue-400/15 rounded-full blur-3xl opacity-30" />
-          
-          {/* Header content */}
-          <div className="relative mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-emerald-400/20 mb-6">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-sm font-medium text-slate-600">Assessment Center</span>
+      <div className="min-h-screen bg-white container-responsive">
+        {/* Header Section */}
+        <div className="mb-6 pt-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+                Assessments
+              </h1>
+              <p className="text-gray-600">
+                Create intelligent assessments and evaluate candidates
+              </p>
             </div>
             
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black mb-6 gradient-text-rainbow tracking-tight">
-              Assessments
-            </h1>
-            
-            <p className="text-slate-600 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed mb-8">
-              Create intelligent assessments and evaluate candidates with precision
-            </p>
-            
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-4 justify-center">
+            <div className="flex gap-3">
               <Link to="/assessments/demo">
-                <Button 
-                  variant="outline" 
-                  className="group relative gap-3 px-6 py-3 text-base font-semibold rounded-2xl border-2 border-emerald-400/30 hover:border-emerald-400 hover:bg-emerald-400/10 hover:-translate-y-1 transition-all duration-300"
-                >
-                  <Play className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
-                  <span className="relative">Try Demo</span>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Play className="h-4 w-4" />
+                  Try Demo
                 </Button>
               </Link>
               
               <Link to="/jobs">
-                <Button 
-                  className="group relative gap-3 px-6 py-3 text-base font-semibold rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-emerald-400/30 hover:-translate-y-1 transition-all duration-300 bg-gradient-to-r from-emerald-500 to-blue-500 border-none"
-                >
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-blue-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <Plus className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
-                  <span className="relative">Create Job</span>
+                <Button className="flex items-center gap-2">
+                  <Plus className="h-4 w-4" />
+                  Create Job
                 </Button>
               </Link>
             </div>
           </div>
-          
-          {/* Decorative elements */}
-          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent rounded-full" />
-          <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full" />
         </div>
 
         {/* Enhanced Summary Cards */}
-        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-12">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-6">
           <Card className="group card-premium hover-lift hover-glow border-none shadow-lg rounded-3xl overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50/50 to-white group-hover:from-blue-50 group-hover:via-blue-100/30 group-hover:to-blue-50/50 transition-all duration-500" />
             <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-400/20 to-emerald-400/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -364,7 +344,7 @@ export default function Assessments() {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4">
             {/* Existing Assessments */}
             {assessments.length > 0 && (
               <div>
@@ -372,7 +352,7 @@ export default function Assessments() {
                   <ClipboardCheck className="h-5 w-5" />
                   Existing Assessments ({assessments.length})
                 </h2>
-                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+                <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mb-4">
                   {assessments.map((assessment: any) => {
                     const job = allJobs.find((j: any) => j.id === assessment.jobId);
                     return (
@@ -438,7 +418,7 @@ export default function Assessments() {
                 </CardHeader>
               </Card>
 
-              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-4">
+              <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-3">
                 {activeJobs.map((job: any) => {
                   const hasAssessment = assessments.some((a: any) => a.jobId === job.id);
                   return (

@@ -32,7 +32,7 @@ function SortableJobCard({ job, onArchiveToggle }: { job: Job; onArchiveToggle: 
       className="hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-l-4 border-l-primary/40 hover:border-l-primary group overflow-hidden relative"
     >
       <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-      <CardHeader className="flex flex-col sm:flex-row items-start justify-between space-y-0 relative gap-3 sm:gap-0">
+      <CardHeader className="flex flex-col sm:flex-row items-start justify-between space-y-0 relative gap-2 sm:gap-0 pb-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 sm:gap-3">
             <button
@@ -46,12 +46,12 @@ function SortableJobCard({ job, onArchiveToggle }: { job: Job; onArchiveToggle: 
               <GripVertical className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
             <Link to={`/jobs/${job.id}`} className="group/link flex-1 min-w-0">
-              <CardTitle className="text-lg sm:text-xl font-semibold group-hover/link:text-primary transition-colors truncate">
+              <CardTitle className="text-base sm:text-lg font-semibold group-hover/link:text-primary transition-colors truncate">
                 {job.title}
               </CardTitle>
             </Link>
           </div>
-          <CardDescription className="mt-2 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-sm sm:text-base">
+          <CardDescription className="mt-1 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-sm sm:text-base">
             <span className="truncate">{job.location}</span>
             <span className="text-muted-foreground/50 hidden sm:inline">•</span>
             <span className="truncate">{job.type}</span>
@@ -66,8 +66,8 @@ function SortableJobCard({ job, onArchiveToggle }: { job: Job; onArchiveToggle: 
           </Badge>
         </div>
       </CardHeader>
-      <CardContent className="relative">
-        <div className="flex gap-2 flex-wrap mb-4">
+      <CardContent className="relative pt-3">
+        <div className="flex gap-2 flex-wrap mb-3">
           {job.tags.map((tag) => (
             <Badge key={tag} variant="outline" className="hover:bg-primary/10 transition-colors">
               {tag}
@@ -300,10 +300,10 @@ export function JobsList() {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-3 sm:space-y-4">
       {/* Filters */}
       <Card className="shadow-lg border-0 bg-card/50 backdrop-blur">
-        <CardContent className="pt-4 sm:pt-6">
+        <CardContent className="pt-4 sm:pt-4">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 min-w-0">
               <div className="relative">
@@ -345,7 +345,7 @@ export function JobsList() {
       </Card>
 
       {/* Jobs List */}
-      <div className="space-y-3 sm:space-y-4">
+      <div className="space-y-2 sm:space-y-3">
         {/* Search Results Info */}
         {debouncedSearch && (
           <div className="text-sm text-muted-foreground">
@@ -386,7 +386,7 @@ export function JobsList() {
         ) : (
           <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={data?.data?.map((j: Job) => j.id) || []} strategy={verticalListSortingStrategy}>
-              <div className="space-y-3 sm:space-y-4">
+              <div className="space-y-2 sm:space-y-3">
                 {data?.data?.map((job: Job) => (
                   <SortableJobCard key={job.id} job={job} onArchiveToggle={handleArchiveToggle} />
                 ))}

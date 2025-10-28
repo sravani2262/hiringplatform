@@ -93,36 +93,21 @@ export default function Analytics() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 container-responsive">
-        {/* Enhanced Header Section */}
-        <div className="relative mb-16 text-center pt-8">
-          {/* Background elements */}
-          <div className="absolute inset-0 bg-gradient-radial from-indigo-400/8 via-purple-400/4 to-transparent pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-indigo-400/15 to-purple-400/15 rounded-full blur-3xl opacity-30" />
-          
-          {/* Header content */}
-          <div className="relative mb-12">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-indigo-400/20 mb-6">
-              <div className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
-              <span className="text-sm font-medium text-slate-600">Business Intelligence</span>
-            </div>
-            
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black mb-6 gradient-text-rainbow tracking-tight">
+      <div className="min-h-screen bg-white container-responsive">
+        {/* Header Section */}
+        <div className="mb-6 pt-6">
+          <div>
+            <h1 className="text-2xl font-semibold text-gray-900 mb-2">
               Analytics
             </h1>
-            
-            <p className="text-slate-600 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed mb-8">
-              Gain deep insights into your hiring performance with intelligent analytics
+            <p className="text-gray-600">
+              Gain insights into your hiring performance
             </p>
           </div>
-          
-          {/* Decorative elements */}
-          <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-indigo-400 to-transparent rounded-full" />
-          <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent rounded-full" />
         </div>
 
         {/* Enhanced Key Metrics */}
-        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-12">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-6">
           <Card className="group card-premium hover-lift hover-glow border-none shadow-lg rounded-3xl overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white via-green-50/50 to-white group-hover:from-green-50 group-hover:via-green-100/30 group-hover:to-green-50/50 transition-all duration-500" />
             <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-green-400/20 to-emerald-400/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -256,7 +241,7 @@ export default function Analytics() {
         </div>
 
         {/* Enhanced Charts */}
-        <div className="grid gap-8 lg:grid-cols-2 mb-12">
+        <div className="grid gap-6 lg:grid-cols-2 mb-6">
           {/* Enhanced Stage Distribution */}
           <Card className="group card-premium hover-lift hover-glow border-none shadow-xl rounded-3xl overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-white via-indigo-50/30 to-white" />
@@ -368,7 +353,7 @@ export default function Analytics() {
         </div>
 
         {/* Candidates per Job */}
-        <Card className="mb-6 sm:mb-8 hover:shadow-lg transition-shadow">
+        <Card className="mb-4 sm:mb-6 hover:shadow-lg transition-shadow">
           <CardHeader>
             <CardTitle className="text-lg sm:text-xl">Top Jobs by Applicants</CardTitle>
             <CardDescription className="text-xs sm:text-sm">Most popular job positions</CardDescription>

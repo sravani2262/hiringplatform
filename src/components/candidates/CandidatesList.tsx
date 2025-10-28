@@ -322,11 +322,11 @@ export function CandidatesList() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* Enhanced Filters */}
       <Card className="card-premium border-none shadow-xl rounded-3xl overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-white via-slate-50/50 to-white" />
-        <CardContent className="pt-8 pb-6 relative z-10">
+        <CardContent className="pt-6 pb-4 relative z-10">
           <div className="mb-4">
             <h2 className="text-xl font-bold text-slate-800 mb-2">Search & Filter Candidates</h2>
             <p className="text-slate-600 text-sm">Find and manage candidates across all stages</p>
@@ -441,7 +441,7 @@ export function CandidatesList() {
       </div>
 
       {/* Enhanced Candidates List */}
-      <div className="space-y-4">
+      <div className="space-y-2">
         {filteredCandidates.map((candidate: Candidate) => (
           <Card 
             key={candidate.id} 
@@ -450,7 +450,7 @@ export function CandidatesList() {
             {/* Gradient overlay on hover */}
             <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             
-            <CardContent className="flex items-center gap-6 p-6 relative z-10">
+            <CardContent className="flex items-center gap-4 p-4 relative z-10">
               {/* Enhanced Checkbox */}
               <div className="relative">
                 <input
@@ -468,8 +468,8 @@ export function CandidatesList() {
               >
                 {/* Enhanced Avatar */}
                 <div className="relative">
-                  <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
-                    <span className="text-lg font-bold text-primary">
+                  <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg">
+                    <span className="text-sm font-bold text-primary">
                       {candidate.name
                         .split(" ")
                         .map((n) => n[0])
@@ -483,7 +483,7 @@ export function CandidatesList() {
                 
                 {/* Candidate Info */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-xl font-bold text-slate-800 group-hover/link:text-primary transition-colors duration-300 mb-2">
+                  <h3 className="text-lg font-bold text-slate-800 group-hover/link:text-primary transition-colors duration-300 mb-1">
                     {candidate.name}
                   </h3>
                   <div className="flex items-center gap-3 text-slate-600">
